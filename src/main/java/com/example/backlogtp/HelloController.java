@@ -17,6 +17,5 @@ public class HelloController {
     protected void onRemoveButtonClick(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Mais oui on t'aime quand même");
         alert.show();
-        System.out.println();
     }
 }
