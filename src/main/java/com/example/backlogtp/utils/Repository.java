@@ -1,6 +1,7 @@
 package com.example.backlogtp.utils;
 
 import java.sql.SQLException;
+import java.util.Set;
 
 public class Repository {
 
@@ -11,7 +12,7 @@ public class Repository {
 
     static {
         try {
-            System.out.println("Create conncetion with postgres");
+            System.out.println("Create connection with postgres");
             daoACCESS = new DAOAccess.Builder().url(url).user(user).password(password).build();
         } catch (SQLException e) {
             throw new RuntimeException(e);

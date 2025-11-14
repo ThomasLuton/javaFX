@@ -1,17 +1,24 @@
 package logic.services;
 
+import com.example.backlogtp.repositories.UserRepository;
+import com.example.backlogtp.utils.DAO;
 import com.example.backlogtp.utils.DAOAccess;
 import com.example.backlogtp.utils.Repository;
 import com.example.backlogtp.utils.exceptions.ValidationException;
+
+import logic.dtos.UserInfo;
 import logic.entities.Client;
 import logic.entities.EventPlanner;
 import logic.entities.User;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserService {
 
 	private final DAOAccess daoAccess = Repository.getDaoACCESS();
+	private final UserRepository users = new UserRepository();
 	
 	public void createUser(String name, String email, String password, boolean isEventPlanner) throws SQLException {
 		isValid(name, email, password);
@@ -26,12 +33,14 @@ public class UserService {
 		user.setEmail(email);
 		user.setPassword(password);
 		
-		daoAccess.add(user);
+		users.createUser(user);
+
+		users.findByEmail("toto@toto");
 	}
 	
 	private void isValid(String name, String email, String password) throws ValidationException{
 
-	    // ---- Vérification du nom ----
+	    // Vérification du nom 
 	    if (name == null || name.isBlank()) {
 	        throw new ValidationException("Nom est vide");
 	    }
@@ -41,7 +50,7 @@ public class UserService {
 			throw new ValidationException("Caractères non permis dans le nom");
 	    }
 
-	    // ---- Vérification de l'email ----
+	    // Vérification de l'email 
 	    if (email == null || email.isBlank()) {
 			throw new ValidationException("Email est vide");
 	    }
@@ -51,7 +60,7 @@ public class UserService {
 			throw new ValidationException("Email n'est pas un email");
 	    }
 
-	    // ---- Vérification du mot de passe ----
+	    // Vérification du mot de passe 
 	    if (password == null || password.isBlank()) {
 			throw new ValidationException("Mot de passe vide");
 	    }
@@ -63,7 +72,65 @@ public class UserService {
 	    }
 
 	}
+	
+	public UserInfo connect(String email, String password) throws Exception {
+
+
+		List<User> users = daoAccess.list(User.class);
+		if (email == null || email.isBlank()) {
+			throw new Exception ("Email cannot be empty");
+		}
+
+	   
+	    List<Client> clients = daoAccess.list(Client.class);
+	    List<EventPlanner> planners = daoAccess.list(EventPlanner.class);
+	    
+	    List<UserInfo> results = new ArrayList<>();
+
+	    // Chercher dans clients 
+	    
+	    for (Client c : clients) {
+	        if (c.getEmail().equalsIgnoreCase(email)) {
+
+	            if (!c.getPassword().equals(password)) {
+	                throw new Exception("Invalid credentials");
+	            }
+
+	            results.add(new UserInfo(
+	                    c.getName(),
+	                    c.getEmail(),
+	                    "CLIENT"
+	            ));
+	        }
+	    }
+	    
+	    // Chercher dans event planners
+	    for (EventPlanner ep : planners) {
+	        if (ep.getEmail().equalsIgnoreCase(email)) {
+
+	            if (!ep.getPassword().equals(password)) {
+	                throw new Exception("Invalid credentials");
+	            }
+
+	            results.add(new UserInfo(
+	                    ep.getName(),
+	                    ep.getEmail(),
+	                    "EVENT_PLANNER"
+	            ));
+	        }
+	    }
+	    
+	    // Aucun user trouvé
+	    
+	    if (results.isEmpty()) {
+	        throw new Exception("Invalid credentials");
+	    }
+
+	    return null;
+	}
+
 
 		
 		
-}
+};
+ 
