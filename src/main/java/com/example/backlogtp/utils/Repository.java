@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public class Repository {
 
-    private static final String url = "jdbc:postgresql://localhost:5432/php_my_admin";
+    private static final String url = "jdbc:postgresql://localhost:5432/event_planner";
     private static final String user = "postgres";
     private static final String password = "admin";
     private static final DAOAccess daoACCESS;

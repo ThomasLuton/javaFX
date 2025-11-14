@@ -1,5 +1,6 @@
 package com.example.backlogtp.ui;
 
+import com.example.backlogtp.utils.exceptions.ValidationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +15,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Popup;
+import javafx.stage.PopupWindow;
+import logic.services.UserService;
+
+import java.sql.SQLException;
 
 public class RegisterForm {
 
@@ -74,17 +80,17 @@ public class RegisterForm {
         grid.add(customText, 1, 4);
 
         btnRegister.setOnAction(e -> {
+            try {
+                new UserService().createUser(userTextField.getText(), emailTextField.getText(),pwBox.getText(), false);
 
-            // TODO: IMPLEMENTER LES VALIDATIONS ICI
-            if(false) {
-                // Exemple type pour un message d'erreur
+                //go to connect
+            } catch (SQLException ex) {
                 customText.setFill(Color.FIREBRICK);
-                customText.setText("ERROR");
+                customText.setText(ex.getMessage());
+            } catch (ValidationException ex){
+                customText.setFill(Color.FIREBRICK);
+                customText.setText(ex.getMessage());
             }
-
-            System.out.println("USERNAME: " + userTextField.getText()
-                    + "\nPASSWORD: " + pwBox.getText()
-                    + "\nEMAIL: " + emailTextField.getText());
         });
 
         return new Scene(grid, 300, 300);

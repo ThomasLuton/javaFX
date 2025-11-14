@@ -15,7 +15,6 @@ public class PlannerApplication extends Application {
         primaryStage.setTitle("Register");
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {
