@@ -19,7 +19,7 @@ public class EventPlannerMapper implements DAOMapper<EventPlanner> {
 
     @Override
     public String toCreateRequest(EventPlanner dao) {
-        String req = "INSERT INTO event_planner (name, email, password) values ('%s', '%s', '%s')";
+        String req = "INSERT INTO event_planner (name, email, password) values ('%s', '%s', '%s', client)";
         return String.format(req, dao.getName(), dao.getEmail(), dao.getPassword());
     }
 

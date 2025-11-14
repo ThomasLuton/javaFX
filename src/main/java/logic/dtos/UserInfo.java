@@ -8,12 +8,5 @@ public record UserInfo (
 
 		
 		) {
-
-	public UserInfo(String name, String email, String type) {
-		this.type = "";
-		this.email = "";
-		this.name = "";
-		// TODO Auto-generated constructor stub
-	}
 	
 }

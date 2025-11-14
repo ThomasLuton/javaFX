@@ -18,7 +18,7 @@ public class ClientMapper implements DAOMapper<Client> {
 
     @Override
     public String toCreateRequest(Client dao) {
-        String req = "INSERT INTO client (name, email, password) values ('%s', '%s', '%s')";
+        String req = "INSERT INTO client (name, email, password) values ('%s', '%s', '%s', 'client')";
         return String.format(req, dao.getName(), dao.getEmail(), dao.getPassword());
     }
 

@@ -1,5 +1,6 @@
 package logic.services;
 
+import com.example.backlogtp.repositories.UserRepository;
 import com.example.backlogtp.utils.DAO;
 import com.example.backlogtp.utils.DAOAccess;
 import com.example.backlogtp.utils.Repository;
@@ -17,6 +18,7 @@ import java.util.List;
 public class UserService {
 
 	private final DAOAccess daoAccess = Repository.getDaoACCESS();
+	private final UserRepository users = new UserRepository();
 	
 	public void createUser(String name, String email, String password, boolean isEventPlanner) throws SQLException {
 		isValid(name, email, password);
@@ -31,7 +33,9 @@ public class UserService {
 		user.setEmail(email);
 		user.setPassword(password);
 		
-		daoAccess.add(user);
+		users.createUser(user);
+
+		users.findByEmail("toto@toto");
 	}
 	
 	private void isValid(String name, String email, String password) throws ValidationException{
@@ -69,8 +73,10 @@ public class UserService {
 
 	}
 	
-	public List<UserInfo> connect(String email, String password) throws Exception {
-		
+	public UserInfo connect(String email, String password) throws Exception {
+
+
+		List<User> users = daoAccess.list(User.class);
 		if (email == null || email.isBlank()) {
 			throw new Exception ("Email cannot be empty");
 		}
@@ -120,7 +126,7 @@ public class UserService {
 	        throw new Exception("Invalid credentials");
 	    }
 
-	    return results;
+	    return null;
 	}
 
 
