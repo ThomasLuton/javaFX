@@ -11,6 +11,7 @@ public class Repository {
 
     static {
         try {
+            System.out.println("Create conncetion with postgres");
             daoACCESS = new DAOAccess.Builder().url(url).user(user).password(password).build();
         } catch (SQLException e) {
             throw new RuntimeException(e);

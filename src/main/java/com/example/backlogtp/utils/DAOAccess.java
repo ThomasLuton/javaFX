@@ -1,5 +1,7 @@
 package com.example.backlogtp.utils;
 
+import com.example.backlogtp.utils.mappers.MapperFactory;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class DAOAccess {
         String tableName = table.toString().split(" ")[1].substring(table.getPackageName().length() +1);
         ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName);
         List list = new ArrayList<>();
-        DAOMapper mapper = initMapper(table);
+        DAOMapper mapper = new MapperFactory().initMapper(table);
         while (resultSet.next()){
             list.add(mapper.toEntity(resultSet));
         }
@@ -29,16 +31,16 @@ public class DAOAccess {
     }
 
     public void add(DAO dao) throws SQLException {
-        DAOMapper mapper = initMapper(dao.getClass());
+        DAOMapper mapper = new MapperFactory().initMapper(dao.getClass());
         statement.executeUpdate(mapper.toCreateRequest(dao));
     }
 
     public void delete(DAO dao) throws SQLException {
-        DAOMapper mapper = initMapper(dao.getClass());
+        DAOMapper mapper = new MapperFactory().initMapper(dao.getClass());
         statement.executeUpdate(mapper.toDeleteRequest(dao));
     }
     public void update(DAO dao) throws SQLException {
-        DAOMapper mapper = initMapper(dao.getClass());
+        DAOMapper mapper = new MapperFactory().initMapper(dao.getClass());
         statement.executeUpdate(mapper.toUpdateRequest(dao));
     }
 
@@ -62,9 +64,5 @@ public class DAOAccess {
         DAOAccess build() throws SQLException {
             return new DAOAccess(url, user, password);
         }
-    }
-
-    private DAOMapper initMapper(Class table){
-        throw new RuntimeException("No mapper available");
     }
 }
