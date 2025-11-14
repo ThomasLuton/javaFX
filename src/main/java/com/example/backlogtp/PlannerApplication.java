@@ -8,13 +8,14 @@ import javafx.stage.Stage;
 public class PlannerApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
+
         RegisterForm form = new RegisterForm();
+        Scene scene = form.getFormScene();
 
-        Scene scene = new Scene(form.getView(), 800, 600);
-
-        primaryStage.setTitle("App");
+        primaryStage.setTitle("Register");
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     public static void main(String[] args) {
