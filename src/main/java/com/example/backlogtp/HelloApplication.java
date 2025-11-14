@@ -1,5 +1,7 @@
 package com.example.backlogtp;
 
+import com.example.backlogtp.utils.DAOAccess;
+import com.example.backlogtp.utils.Repository;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
