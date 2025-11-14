@@ -32,6 +32,8 @@
     <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
     <PasswordField fx:id="pwField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
+    <CheckBox text="Event planner" fx:id="isEventPlanner" GridPane.columnIndex="0" GridPane.rowIndex="4"></CheckBox>
+
 
     <Text fx:id="customText"
           GridPane.columnIndex="1"
@@ -44,6 +46,13 @@
           GridPane.columnIndex="1"
           GridPane.rowIndex="5">
         <Button text="Register" onAction="#register"/>
+    </HBox>
+
+    <HBox alignment="BOTTOM_RIGHT"
+          spacing="10"
+          GridPane.columnIndex="1"
+          GridPane.rowIndex="6">
+        <Button text="Connect" onAction="#connect"/>
     </HBox>
 
 </GridPane>

@@ -1,8 +1,12 @@
 package com.example.backlogtp.repositories;
 
+import logic.entities.Client;
+import logic.entities.EventPlanner;
 import logic.entities.User;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class UserRepository {
@@ -18,12 +22,21 @@ public class UserRepository {
         preparedStatement.execute();
     }
 
-    public Optional<User> findByEmail(String email) throws SQLException {
-        String query = "SELECT FROM users WHERE email = ?";
+    public User findByEmail(String email) throws SQLException {
+        String query = "SELECT * FROM users WHERE email = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, email);
         ResultSet resultSet = preparedStatement.executeQuery();
-        return null;
+        List<User> users = new ArrayList<>();
+        while (resultSet.next()){
+            String status = resultSet.getString("status");
+            User user = status.equals("client") ? new Client(): new EventPlanner();
+            user.setName(resultSet.getString("name"));
+            user.setEmail(resultSet.getString("email"));
+            user.setPassword(resultSet.getString("password"));
+            users.add(user);
+        }
+        return users.size() == 0 ? null: users.get(0);
     }
 
 }

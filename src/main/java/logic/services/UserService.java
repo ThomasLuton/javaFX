@@ -14,6 +14,7 @@ import logic.entities.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserService {
 
@@ -22,20 +23,13 @@ public class UserService {
 	
 	public void createUser(String name, String email, String password, boolean isEventPlanner) throws SQLException {
 		isValid(name, email, password);
-		User user;
-		if (isEventPlanner) {
-			user = new EventPlanner();
-		} else {
-			user = new Client();
-		}
+		User user = isEventPlanner ? new EventPlanner(): new Client();
 		
 		user.setName(name);
 		user.setEmail(email);
 		user.setPassword(password);
 		
 		users.createUser(user);
-
-		users.findByEmail("toto@toto");
 	}
 	
 	private void isValid(String name, String email, String password) throws ValidationException{
@@ -74,59 +68,14 @@ public class UserService {
 	}
 	
 	public UserInfo connect(String email, String password) throws Exception {
-
-
-		List<User> users = daoAccess.list(User.class);
-		if (email == null || email.isBlank()) {
-			throw new Exception ("Email cannot be empty");
+		User user = users.findByEmail(email);
+		if(user == null){
+			throw new ValidationException("Wrong credentials");
 		}
-
-	   
-	    List<Client> clients = daoAccess.list(Client.class);
-	    List<EventPlanner> planners = daoAccess.list(EventPlanner.class);
-	    
-	    List<UserInfo> results = new ArrayList<>();
-
-	    // Chercher dans clients 
-	    
-	    for (Client c : clients) {
-	        if (c.getEmail().equalsIgnoreCase(email)) {
-
-	            if (!c.getPassword().equals(password)) {
-	                throw new Exception("Invalid credentials");
-	            }
-
-	            results.add(new UserInfo(
-	                    c.getName(),
-	                    c.getEmail(),
-	                    "CLIENT"
-	            ));
-	        }
-	    }
-	    
-	    // Chercher dans event planners
-	    for (EventPlanner ep : planners) {
-	        if (ep.getEmail().equalsIgnoreCase(email)) {
-
-	            if (!ep.getPassword().equals(password)) {
-	                throw new Exception("Invalid credentials");
-	            }
-
-	            results.add(new UserInfo(
-	                    ep.getName(),
-	                    ep.getEmail(),
-	                    "EVENT_PLANNER"
-	            ));
-	        }
-	    }
-	    
-	    // Aucun user trouvé
-	    
-	    if (results.isEmpty()) {
-	        throw new Exception("Invalid credentials");
-	    }
-
-	    return null;
+		if(!user.getPassword().equals(password)){
+			throw new ValidationException("Wrong credentials");
+		}
+	    return new UserInfo(user.getName(), user.getEmail(), user.getStatus());
 	}
 
 

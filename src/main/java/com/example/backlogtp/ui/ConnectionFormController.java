@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import logic.services.UserService;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -29,9 +30,9 @@ public class ConnectionFormController {
 
 
     @FXML
-    private void login(ActionEvent event) {
-
+    private void login(ActionEvent event) throws Exception {
         try {
+            new UserService().connect(emailTextField.getText(), pwBox.getText());
             // Redirection vers la home sur le submit du bouton login
             Parent homepage = FXMLLoader.load(
                     Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage.fxml"))

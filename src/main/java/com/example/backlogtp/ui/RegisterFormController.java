@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -33,13 +34,31 @@ public class RegisterFormController {
     private Text customText;
 
     @FXML
+    private CheckBox isEventPlanner;
+
+    @FXML
+    private void connect(ActionEvent event){
+        try {
+            Parent loginPage = FXMLLoader.load(
+                    Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))
+            );
+            Scene scene = new Scene(loginPage);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        }catch (Exception e){
+
+        }
+    }
+    @FXML
     private void register(ActionEvent event) {
         try {
             new UserService().createUser(
                     nameField.getText(),
                     emailField.getText(),
                     pwField.getText(),
-                    false
+                    isEventPlanner.isSelected()
             );
 
             // Redirect to login page

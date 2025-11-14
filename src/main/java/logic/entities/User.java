@@ -7,7 +7,6 @@ public abstract class User extends AbstractDAO {
 	private String name;
 	private String email;
 	private String password;
-
 	private String status;
 
 	public String getName() {
