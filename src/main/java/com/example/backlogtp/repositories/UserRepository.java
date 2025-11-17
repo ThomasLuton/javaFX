@@ -34,6 +34,7 @@ public class UserRepository {
             user.setName(resultSet.getString("name"));
             user.setEmail(resultSet.getString("email"));
             user.setPassword(resultSet.getString("password"));
+            user.setId(resultSet.getLong("id"));
             users.add(user);
         }
         return users.size() == 0 ? null: users.get(0);
