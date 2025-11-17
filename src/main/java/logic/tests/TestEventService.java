@@ -21,21 +21,21 @@ public class TestEventService {
 	                "eventPlanner"   
 	        );
 		 
-		 try {
-			 eventService.createEvent(organizer, "Concert", LocalDateTime.now().plusDays(2),"Paris", "CONCERT", List.of(new EventCategory()));
-			 System.out.println("Événement créé ");
-			 
-			 eventService.createEvent(
-	                    organizer,
-	                    "Conférence Java",
-	                    LocalDateTime.now().plusDays(5),
-	                    "Lyon",
-	                    "CONFERENCE",
-					 List.of(new EventCategory()));
-			System.out.println("Événement créé " );
-		 } catch (Exception e) {
-			 System.out.println("Erreur : " + e.getMessage());
-		 }
+//		 try {
+//			 eventService.createEvent(organizer, "Concert", LocalDateTime.now().plusDays(2),"Paris", "CONCERT", List.of(new EventCategory()));
+//			 System.out.println("Événement créé ");
+//
+//			 eventService.createEvent(
+//	                    organizer,
+//	                    "Conférence Java",
+//	                    LocalDateTime.now().plusDays(5),
+//	                    "Lyon",
+//	                    "CONFERENCE",
+//					 List.of(new EventCategory()));
+//			System.out.println("Événement créé " );
+//		 } catch (Exception e) {
+//			 System.out.println("Erreur : " + e.getMessage());
+//		 }
 		
 	}
 
