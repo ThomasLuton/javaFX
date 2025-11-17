@@ -85,4 +85,58 @@ public class EventRepository {
         }
         return events.size() == 0 ? null: events.get(0);
     }
+    
+    public List<Event> findUpcomingEventsSortedByDate() throws SQLException {
+    	 String query = """
+    	            SELECT
+    	                e.id       AS event_id,
+    	                e.name     AS event_name,
+    	                e.date     AS event_date,
+    	                e.location AS event_location,
+    	                e.type     AS event_type,
+    	                u.id       AS user_id,
+    	                u.name     AS user_name,
+    	                u.email    AS user_email
+    	            FROM events e
+    	            JOIN users u ON e.organizer_id = u.id
+    	            WHERE e.date >= NOW()
+    	            ORDER BY e.date ASC
+    	            """;
+    	 PreparedStatement preparedStatement = connection.prepareStatement(query);
+    	 ResultSet rs = preparedStatement.executeQuery();
+    	 
+    	 List<Event> events = new ArrayList<>();
+    	 
+    	 while (rs.next()) {
+
+             String type = rs.getString("event_type");
+             Event event;
+             switch (type.toUpperCase()) {
+                 case "CONCERT" -> event = new Concert();
+                 case "SPECTACLE" -> event = new Spectacle();
+                 case "CONFERENCE" -> event = new Conference();
+                 default -> throw new ValidationException("Unknown event : " + type);
+             }
+             
+             event.setId(rs.getLong("event_id"));
+             event.setName(rs.getString("event_name"));
+             event.setDate(rs.getTimestamp("event_date").toLocalDateTime());
+             event.setLocation(rs.getString("event_location"));
+             event.setType(type);
+             
+             // Organisateur 
+             EventPlanner eventPlanner = new EventPlanner();
+             eventPlanner.setId(rs.getLong("user_id"));
+             eventPlanner.setName(rs.getString("user_name"));
+             eventPlanner.setEmail(rs.getString("user_email"));
+            
+             // Associer l'event planner à l'évenement
+             event.setUser(eventPlanner);
+             
+             events.add(event); //ajout à la liste
+       
+    	 }
+    	 
+    	 return events;
+    }
 }

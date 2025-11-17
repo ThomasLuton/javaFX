@@ -12,15 +12,15 @@ import logic.services.EventService;
 public class TestEventService {
 	
 	public static void main(String[] args) {
-		
-		EventService eventService = new EventService(); 
-		
-		 UserInfo organizer = new UserInfo(
-	                "Kenza",
-	                "kenza@example.com",
-	                "eventPlanner"   
-	        );
-		 
+		try {
+		EventService eventService = new EventService();
+//
+//		 UserInfo organizer = new UserInfo(
+//	                "Kenza",
+//	                "kenza@example.com",
+//	                "eventPlanner"
+//	        );
+//
 //		 try {
 //			 eventService.createEvent(organizer, "Concert", LocalDateTime.now().plusDays(2),"Paris", "CONCERT", List.of(new EventCategory()));
 //			 System.out.println("Événement créé ");
@@ -36,7 +36,29 @@ public class TestEventService {
 //		 } catch (Exception e) {
 //			 System.out.println("Erreur : " + e.getMessage());
 //		 }
+//
+//	}
 		
-	}
+		 List<Event> events = eventService.listUpcomingEventsForClient();
+
+         if (events.isEmpty()) {
+             System.out.println("Aucun événement trouvé !");
+         } else {
+             for (Event e : events) {
+                 System.out.println(
+                         "Event #" + e.getId() +
+                         " | " + e.getName() +
+                         " | " + e.getDate() +
+                         " | " + e.getLocation() +
+                         " | organisé par : " + e.getUser().getName() +
+                         " (" + e.getType() + ")"
+                 );
+             }
+         }
+
+     } catch (Exception e) {
+         e.printStackTrace();
+     }
+ }
 
 }
