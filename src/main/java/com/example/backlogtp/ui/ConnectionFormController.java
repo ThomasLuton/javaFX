@@ -1,5 +1,6 @@
 package com.example.backlogtp.ui;
 
+import com.example.backlogtp.PlannerApplication;
 import com.example.backlogtp.utils.exceptions.ValidationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +36,7 @@ public class ConnectionFormController {
         try {
             UserInfo userInfo = new UserService().connect(emailTextField.getText(), pwBox.getText());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            PlannerApplication.staticUserInfo = userInfo;
 
             // Redirection vers la home sur le submit du bouton login en fonction du type d'user
             if(userInfo.type().equals("eventPlanner")) {

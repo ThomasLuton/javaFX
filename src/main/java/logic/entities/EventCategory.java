@@ -6,6 +6,7 @@ public class EventCategory {
     private double price;  // prix d'un ticket
     private int capacity;  // nombre total de places disponibles
 
+	private Event event;
     public EventCategory() {}
 
     public EventCategory(String name, double price, int capacity) {
@@ -37,6 +38,14 @@ public class EventCategory {
 
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
 	}
 
 	@Override

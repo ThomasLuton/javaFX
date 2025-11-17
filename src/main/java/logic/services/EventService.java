@@ -20,6 +20,8 @@ import logic.entities.Spectacle;
 
 public class EventService {
 
+    private final EventRepository events = new EventRepository();
+
     public void createEvent (CreateEvent input) throws SQLException {
     	
     	if (!input.userInfo().type().equals("eventPlanner")) {
@@ -58,11 +60,23 @@ public class EventService {
         event.setLocation(input.location());
         event.setUser(new UserRepository().findByEmail(input.userInfo().email()));
 
+        events.createEvent(event);
+        Event freshEvent = events.findLast();
+
         input.categories().forEach(c -> {
-            // add category on base then add on repo
+            EventCategory eventCategory = new EventCategory();
+            eventCategory.setName(c.name());
+            eventCategory.setCapacity(c.capacity());
+            eventCategory.setPrice(c.price());
+            eventCategory.setEvent(freshEvent);
+            try {
+                events.createEventCategory(eventCategory);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         });
 
-        new EventRepository().createEvent(event);
+
     }
 }
 ;
