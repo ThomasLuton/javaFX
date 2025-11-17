@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import logic.dtos.UserInfo;
 import logic.services.UserService;
 
 import java.io.IOException;
@@ -32,15 +33,22 @@ public class ConnectionFormController {
     @FXML
     private void login(ActionEvent event) throws Exception {
         try {
-            new UserService().connect(emailTextField.getText(), pwBox.getText());
-            // Redirection vers la home sur le submit du bouton login
-            Parent homepage = FXMLLoader.load(
-                    Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage.fxml"))
-            );
-            Scene homeScene = new Scene(homepage);
+            UserInfo userInfo = new UserService().connect(emailTextField.getText(), pwBox.getText());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            stage.setScene(homeScene);
+            // Redirection vers la home sur le submit du bouton login en fonction du type d'user
+            if(userInfo.type().equals("eventPlanner")) {
+                Parent homepage = FXMLLoader.load(
+                        Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_planner.fxml"))
+                );
+                stage.setScene(new Scene(homepage));
+
+            } else if(userInfo.type().equals("client")) {
+                Parent homepage = FXMLLoader.load(
+                        Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
+                );
+                stage.setScene(new Scene(homepage));
+            }
             stage.show();
 
             // TODO: implémenter les validations utilisateur

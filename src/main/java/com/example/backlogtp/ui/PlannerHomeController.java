@@ -1,5 +1,4 @@
 package com.example.backlogtp.ui;
 
-public class HomeController {
-
+public class PlannerHomeController {
 }
