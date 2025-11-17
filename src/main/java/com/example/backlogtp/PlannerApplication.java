@@ -5,11 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import logic.dtos.UserInfo;
+import logic.entities.User;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class PlannerApplication extends Application {
+
+    public static UserInfo staticUserInfo = null;
     @Override
     public void start(Stage primaryStage) throws IOException {
         String resource = "register_form.fxml";

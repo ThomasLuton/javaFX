@@ -52,16 +52,16 @@
                 <Label text="Catégories:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                 <VBox fx:id="categoriesContainer" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
                     <!-- Catégories fixes : Standard et VIP -->
-                    <HBox spacing="5">
-                        <TextField fx:id="standardNameField" text="Standard" promptText="Nom catégorie"/>
-                        <TextField fx:id="standardPriceField" promptText="Prix"/>
-                        <TextField fx:id="standardSeatField" promptText="Nombre de places"/>
-                    </HBox>
-                    <HBox spacing="5">
-                        <TextField fx:id="vipNameField" text="VIP" promptText="Nom catégorie"/>
-                        <TextField fx:id="vipPriceField" promptText="Prix"/>
-                        <TextField fx:id="vipSeatField" promptText="Nombre de places"/>
-                    </HBox>
+<!--                    <HBox spacing="5">-->
+<!--                        <TextField fx:id="standardNameField" text="Standard" promptText="Nom catégorie"/>-->
+<!--                        <TextField fx:id="standardPriceField" promptText="Prix"/>-->
+<!--                        <TextField fx:id="standardSeatField" promptText="Nombre de places"/>-->
+<!--                    </HBox>-->
+<!--                    <HBox spacing="5">-->
+<!--                        <TextField fx:id="vipNameField" text="VIP" promptText="Nom catégorie"/>-->
+<!--                        <TextField fx:id="vipPriceField" promptText="Prix"/>-->
+<!--                        <TextField fx:id="vipSeatField" promptText="Nombre de places"/>-->
+<!--                    </HBox>-->
                 </VBox>
                 <Button text="Ajouter catégorie" GridPane.columnIndex="1" GridPane.rowIndex="5" onAction="#addCategory"/>
 
@@ -74,7 +74,7 @@
                 <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="7">
                     <RadioButton text="Concert" toggleGroup="$eventType"/>
                     <RadioButton text="Spectacle" toggleGroup="$eventType"/>
-                    <RadioButton text="Conférence" toggleGroup="$eventType"/>
+                    <RadioButton text="Conference" toggleGroup="$eventType"/>
                 </VBox>
 
 
