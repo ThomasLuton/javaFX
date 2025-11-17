@@ -5,35 +5,39 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:id="grid"
-          alignment="CENTER"
+<GridPane alignment="CENTER"
           hgap="10"
           vgap="10"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.example.backlogtp.ui.ConnectionFormController">
+          fx:controller="com.example.backlogtp.ui.ConnectionFormController"
+          stylesheets="@form.css"
+          styleClass="container">
 
     <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
 
-    <Text text="Log In" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
-        <font>
-            <Font name="Tahoma" size="20"/>
-        </font>
-    </Text>
+    <Text text="Log In" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" styleClass="title"/>
 
 
-    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="form-label"/>
+    <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="input"/>
 
 
-    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <PasswordField fx:id="pwBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="form-label"/>
+    <PasswordField fx:id="pwBox" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="input"/>
 
 
     <Text fx:id="customText" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
 
     <HBox spacing="10" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5">
-        <Button text="Log In" onAction="#login"/>
+        <Button text="Log In" onAction="#login" styleClass="primary-btn"/>
+    </HBox>
+
+    <HBox alignment="BOTTOM_RIGHT"
+          spacing="10"
+          GridPane.columnIndex="1"
+          GridPane.rowIndex="6">
+        <Button text="Register" onAction="#register" styleClass="secondary-btn"/>
     </HBox>
 
 </GridPane>

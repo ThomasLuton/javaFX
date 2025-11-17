@@ -42,12 +42,14 @@ public class ConnectionFormController {
                         Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_planner.fxml"))
                 );
                 stage.setScene(new Scene(homepage));
+                stage.setMaximized(true);
 
             } else if(userInfo.type().equals("client")) {
                 Parent homepage = FXMLLoader.load(
                         Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
                 );
                 stage.setScene(new Scene(homepage));
+                stage.setMaximized(true);
             }
             stage.show();
 
@@ -57,6 +59,21 @@ public class ConnectionFormController {
             customText.setFill(Color.FIREBRICK);
             customText.setText(ex.getMessage());
         }
+    }
+
+    @FXML
+    private void register(ActionEvent event){
+        try {
+            Parent registerPage = FXMLLoader.load(
+                    Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/register_form.fxml"))
+            );
+            Scene scene = new Scene(registerPage);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+        } catch (Exception e) {}
     }
 
 }
