@@ -76,7 +76,12 @@ public class EventService {
             }
         });
 
-
     }
+    
+    public List<Event> listUpcomingEventsForClient() throws SQLException {
+        return events.findUpcomingEventsSortedByDate();
+    }
+    
+    
 }
 ;

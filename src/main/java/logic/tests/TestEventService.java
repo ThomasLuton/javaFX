@@ -11,9 +11,9 @@ import logic.services.EventService;
 
 public class TestEventService {
 	
-//	public static void main(String[] args) {
-//
-//		EventService eventService = new EventService();
+	public static void main(String[] args) {
+		try {
+		EventService eventService = new EventService();
 //
 //		 UserInfo organizer = new UserInfo(
 //	                "Kenza",
@@ -38,5 +38,27 @@ public class TestEventService {
 //		 }
 //
 //	}
+		
+		 List<Event> events = eventService.listUpcomingEventsForClient();
+
+         if (events.isEmpty()) {
+             System.out.println("Aucun événement trouvé !");
+         } else {
+             for (Event e : events) {
+                 System.out.println(
+                         "Event #" + e.getId() +
+                         " | " + e.getName() +
+                         " | " + e.getDate() +
+                         " | " + e.getLocation() +
+                         " | organisé par : " + e.getUser().getName() +
+                         " (" + e.getType() + ")"
+                 );
+             }
+         }
+
+     } catch (Exception e) {
+         e.printStackTrace();
+     }
+ }
 
 }
