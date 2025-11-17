@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 import logic.services.UserService;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -78,6 +80,10 @@ public class RegisterFormController {
         } catch (IOException ex) {
             customText.setFill(Color.FIREBRICK);
             customText.setText("Could not load login page.");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -3,6 +3,7 @@ package logic.services;
 import com.example.backlogtp.repositories.UserRepository;
 import com.example.backlogtp.utils.DAO;
 import com.example.backlogtp.utils.DAOAccess;
+import com.example.backlogtp.utils.PasswordEncoder;
 import com.example.backlogtp.utils.Repository;
 import com.example.backlogtp.utils.exceptions.ValidationException;
 
@@ -11,6 +12,8 @@ import logic.entities.Client;
 import logic.entities.EventPlanner;
 import logic.entities.User;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +24,13 @@ public class UserService {
 	private final DAOAccess daoAccess = Repository.getDaoACCESS();
 	private final UserRepository users = new UserRepository();
 	
-	public void createUser(String name, String email, String password, boolean isEventPlanner) throws SQLException {
+	public void createUser(String name, String email, String password, boolean isEventPlanner) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
 		isValid(name, email, password);
 		User user = isEventPlanner ? new EventPlanner(): new Client();
 		
 		user.setName(name);
 		user.setEmail(email);
-		user.setPassword(password);
+		user.setPassword(new PasswordEncoder().encode(password));
 		
 		users.createUser(user);
 	}
@@ -72,7 +75,7 @@ public class UserService {
 		if(user == null){
 			throw new ValidationException("Wrong credentials");
 		}
-		if(!user.getPassword().equals(password)){
+		if(!new PasswordEncoder().matches(password, user.getPassword())){
 			throw new ValidationException("Wrong credentials");
 		}
 	    return new UserInfo(user.getName(), user.getEmail(), user.getStatus());
