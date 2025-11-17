@@ -1,0 +1,19 @@
+#card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 15 20;
+    -fx-spacing: 30;
+
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 10, 0.3, 0, 3);
+
+    -fx-cursor: hand;
+}
+
+#card .label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+    -fx-font-weight: 500;
+}
+

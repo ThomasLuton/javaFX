@@ -36,16 +36,10 @@
             <Label text="Bienvenue sur votre espace client"
                    styleClass="subtitle"/>
 
+            <Label text="Vos événements" styleClass="title"/>
+
             <HBox spacing="30" alignment="CENTER">
-
-                <StackPane styleClass="card">
-                    <VBox spacing="10" alignment="CENTER">
-                        <Label text="Profil" styleClass="card-title"/>
-                        <Label text="Voir / Modifier" styleClass="card-desc"/>
-                        <Button text="Accéder" styleClass="primary-btn"/>
-                    </VBox>
-                </StackPane>
-
+                <VBox fx:id="eventContainer" spacing="10"/>
             </HBox>
 
         </VBox>

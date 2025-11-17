@@ -16,7 +16,8 @@ public class PlannerApplication extends Application {
     public static UserInfo staticUserInfo = null;
     @Override
     public void start(Stage primaryStage) throws IOException {
-        String resource = "register_form.fxml";
+        // String resource = "register_form.fxml";
+        String resource = "homepage_customer.fxml";
 
         Parent registry = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(resource)));
         Scene scene = new Scene(registry);

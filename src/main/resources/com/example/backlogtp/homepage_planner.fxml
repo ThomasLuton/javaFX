@@ -78,7 +78,6 @@
                 </VBox>
 
 
-
                 <HBox spacing="15" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="8">
                     <Button text="Créer l'événement" styleClass="primary-btn" onAction="#createEvent"/>
                 </HBox>
