@@ -1,11 +1,16 @@
 package logic.services;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.backlogtp.repositories.EventRepository;
+import com.example.backlogtp.repositories.UserRepository;
 import com.example.backlogtp.utils.exceptions.ValidationException;
 
+import logic.dtos.CreateCategory;
+import logic.dtos.CreateEvent;
 import logic.dtos.UserInfo;
 import logic.entities.Concert;
 import logic.entities.Conference;
@@ -14,79 +19,50 @@ import logic.entities.EventCategory;
 import logic.entities.Spectacle;
 
 public class EventService {
-	
-	// Pour tester après ça sera en BDD
-	private final List<Event> events = new ArrayList<>();
-   
-    
-    // Vérifier si c'est un eventPlanner
-    private boolean isOrganizer(UserInfo info) {
-       
-        return "eventPlanner".equals(info.type());
-                
-    }
-    
-    // Créer un évenement 
-    
-    public Event createEvent ( UserInfo currentUser,String name, LocalDateTime dateTime, String location, String type) {
+
+    public void createEvent (CreateEvent input) throws SQLException {
     	
-    	if (!isOrganizer(currentUser)) {
+    	if (!input.userInfo().type().equals("eventPlanner")) {
             throw new ValidationException("Only event's planner can create events.");
         }
 
         // Valider les champs
-        if (name == null || name.isBlank()) {
+        if (input.name() == null || input.name().isBlank()) {
             throw new ValidationException("Name of event is missng");
         }
-        if (dateTime == null) {
+        if (input.dateTime() == null) {
             throw new ValidationException("LDate of event is missing");
         }
-        if (dateTime.isBefore(LocalDateTime.now())) {
+        if (input.dateTime().isBefore(LocalDateTime.now())) {
             throw new ValidationException("Date must be in the future");
         }
-        if (location == null || location.isBlank()) {
+        if (input.location() == null || input.location().isBlank()) {
             throw new ValidationException("Location is missing");
         }
-        if (type == null || type.isBlank()) {
+        if (input.type() == null || input.type().isBlank()) {
             throw new ValidationException("Type is missing (CONCERT / SPECTACLE / CONFERENCE)");
         }
 
         // Créer le bon type d'événement selon "type"
         Event event;
-        switch (type.toUpperCase()) {
+        switch (input.type().toUpperCase()) {
             case "CONCERT" -> event = new Concert();
             case "SPECTACLE" -> event = new Spectacle();
             case "CONFERENCE" -> event = new Conference();
-            default -> throw new ValidationException("Unknown event : " + type);
+            default -> throw new ValidationException("Unknown event : " + input.type());
         }
         
        
-        event.setName(name);
-        event.setDate(dateTime);
-        event.setLocation(location);
-        
-        // Catégories par défaut - à modifier
-        List<EventCategory> categories = new ArrayList<>();
-        categories.add(new EventCategory("Standard", 30.0,100));
-        categories.add(new EventCategory("VIP", 60.0,30));
-        
-        event.setCategories(categories);
-        
-        events.add(event);
-        
-        return event;
-        
-    	
+        event.setName(input.name());
+        event.setDate(input.dateTime());
+        event.setLocation(input.location());
+        event.setUser(new UserRepository().findByEmail(input.userInfo().email()));
+
+        input.categories().forEach(c -> {
+            // add category on base then add on repo
+        });
+
+        new EventRepository().createEvent(event);
     }
-
-	public List<Event> listEvents() {
-		
-		return new ArrayList<>(events); //retourne une copie de la liste
-	}
-
-	
-    
-    
-
 }
 ;

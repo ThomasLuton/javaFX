@@ -3,8 +3,10 @@ package logic.tests;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.backlogtp.repositories.EventRepository;
 import logic.dtos.UserInfo;
 import logic.entities.Event;
+import logic.entities.EventCategory;
 import logic.services.EventService;
 
 public class TestEventService {
@@ -20,28 +22,17 @@ public class TestEventService {
 	        );
 		 
 		 try {
-			 Event event1 = eventService.createEvent(organizer, "Concert", LocalDateTime.now().plusDays(2),"Paris", "CONCERT");
+			 eventService.createEvent(organizer, "Concert", LocalDateTime.now().plusDays(2),"Paris", "CONCERT", List.of(new EventCategory()));
+			 System.out.println("Événement créé ");
 			 
-			 System.out.println("Événement créé : " + event1);
-			 
-			 Event event2 = eventService.createEvent(
+			 eventService.createEvent(
 	                    organizer,
 	                    "Conférence Java",
 	                    LocalDateTime.now().plusDays(5),
 	                    "Lyon",
-	                    "CONFERENCE");
-			System.out.println("Événement créé : " + event2);
-			
-			List<Event> events = eventService.listEvents();
-			
-			System.out.println("\nListe des événements :");
-
-			for (Event ev : events) {
-			    System.out.println(" - " + ev.getName() + " | " + ev.getDate());
-			}
-			
-			
-		
+	                    "CONFERENCE",
+					 List.of(new EventCategory()));
+			System.out.println("Événement créé " );
 		 } catch (Exception e) {
 			 System.out.println("Erreur : " + e.getMessage());
 		 }

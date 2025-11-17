@@ -1,19 +1,25 @@
 package logic.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.example.backlogtp.utils.AbstractDAO;
 
 public abstract class Event extends AbstractDAO {
 	
-	    protected String name;
-	    protected LocalDateTime date;
-	    protected String location;
+	    private String name;
+	    private LocalDateTime date;
+	    private String location;
+
+		private User user;
+		private String type;
 	    
 	    // Liste de catégories 
 	    
-	    protected List <EventCategory> categories;
+	    private List<EventCategory> categories = new ArrayList<>();
 
 
 		public String getName() {
@@ -41,23 +47,33 @@ public abstract class Event extends AbstractDAO {
 		}
 
 		public List<EventCategory> getCategories() {
-			return categories;
+			return Collections.unmodifiableList(categories);
 		}
 
-		public void setCategories(List<EventCategory> categories) {
-			this.categories = categories;
-		}
-		
-		@Override
-	    public String toString() {
-	        return "Evenement{" +
-	                ", name='" + name + '\'' +
-	                ", date=" + date +
-	                ", location='" + location + '\'' +
-	                ", categories=" + categories +
-	                '}';
-	    }
-	    
-	    
+	public User getUser() {
+		return user;
+	}
 
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return "Event{" +
+				"name='" + name + '\'' +
+				", date=" + date +
+				", location='" + location + '\'' +
+				", user=" + user +
+				", categories=" + categories +
+				'}';
+	}
 }
