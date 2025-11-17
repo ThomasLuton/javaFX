@@ -12,9 +12,13 @@ import java.util.Objects;
 public class PlannerApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
+        String resource = "register_form.fxml";
 
-        Parent registry = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("register_form.fxml")));
+        Parent registry = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(resource)));
         Scene scene = new Scene(registry);
+
+        // Fullscreen
+        primaryStage.setMaximized(true);
 
         primaryStage.setTitle("Event Planner");
         primaryStage.setScene(scene);

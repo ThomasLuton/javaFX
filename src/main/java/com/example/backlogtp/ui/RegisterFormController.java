@@ -48,6 +48,7 @@ public class RegisterFormController {
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         }catch (Exception e){
 
@@ -71,6 +72,7 @@ public class RegisterFormController {
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
 
         } catch (SQLException | ValidationException ex) {
