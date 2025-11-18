@@ -4,6 +4,7 @@ module com.example.backlogtp {
     requires javafx.graphics;
     requires java.sql;
     requires jdk.xml.dom;
+    requires javafx.base;
 
     opens com.example.backlogtp to javafx.fxml;
     opens com.example.backlogtp.ui to javafx.fxml;
