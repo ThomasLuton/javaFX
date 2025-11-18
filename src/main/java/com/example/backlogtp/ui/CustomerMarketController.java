@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import logic.entities.Event;
 import logic.entities.EventCategory;
@@ -31,6 +32,9 @@ import java.util.Objects;
 public class CustomerMarketController {
 
     @FXML
+    public Text customText;
+
+    @FXML
     private VBox eventContainer;
 
     @FXML
@@ -46,6 +50,11 @@ public class CustomerMarketController {
 
         // nom, date, location, organisateur, categories (-> nom, prix et capacité)
         List<Event> events = eventService.listUpcomingEventsForClient();
+
+        if(events.isEmpty()){
+            customText.setText("No events found");
+        }
+        customText.setText("Tous les événements");
 
         for (Event event : events) {
 

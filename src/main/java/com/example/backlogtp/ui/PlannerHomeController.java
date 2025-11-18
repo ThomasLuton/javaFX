@@ -8,19 +8,19 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import logic.dtos.CreateCategory;
 import logic.dtos.CreateEvent;
 import logic.dtos.UserInfo;
 import logic.entities.Event;
 import logic.services.EventService;
-
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +28,12 @@ import java.util.Objects;
 public class PlannerHomeController {
 
     private final EventService eventService = new EventService();
+
+    @FXML
+    public BorderPane root;
+
+    @FXML
+    public Text eventPresenceText;
 
     @FXML
     private ToggleGroup eventType;
@@ -43,8 +49,12 @@ public class PlannerHomeController {
 
     @FXML
     private VBox eventsContainer;
-    
-   
+
+    @FXML
+    private VBox categoriesContainer;
+
+    @FXML
+    private Text customText;
 
     public void checkSelected() {
         RadioButton selected = (RadioButton) eventType.getSelectedToggle();
@@ -87,13 +97,23 @@ public class PlannerHomeController {
             );
 
             eventService.createEvent(input);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setContentText("Événement créé avec succès");
+            alert.showAndWait();
+
+            Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_planner.fxml")));
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.setScene(new Scene(refreshed));
+            stage.setMaximized(true);
+            stage.show();
+
         } catch (Exception e){
-            e.printStackTrace();
+            customText.setFill(Color.FIREBRICK);
+            customText.setText("Erreur dans la création de l'événement");
         }
     }
-
-    @FXML
-    private VBox categoriesContainer;
     
     private HBox createEventCard(Event event) {
         HBox card = new HBox(20);
@@ -138,6 +158,7 @@ public class PlannerHomeController {
     @FXML
     private void initialize() {
         try {
+            addCategory();
             // style des cards
             if (eventsContainer != null) {
                 eventsContainer.getStylesheets().add("components.css");
@@ -153,20 +174,34 @@ public class PlannerHomeController {
             // récupérer ses événements
             List<Event> myEvents = eventService.listEventsForOrganizer(currentUser);
 
+            if (myEvents.isEmpty()) {
+                eventPresenceText.setText("Vous n'avez pas encore créé d'événements.");
+            }
+
             // pour chaque event, créer une "card" HBox
             for (Event e : myEvents) {
-                HBox card = new HBox(10);
-                card.setId("card");
-                card.setMaxWidth(600);
+                // Card linéaire pour les informations générales des events
+                GridPane plannerCard = new GridPane();
+                plannerCard.setId("card");
+                plannerCard.setHgap(10);
+                plannerCard.setVgap(20);
+                ColumnConstraints name = new ColumnConstraints(160);
+                ColumnConstraints date = new ColumnConstraints(160);
+                plannerCard.getColumnConstraints().addAll(name, date);
 
-                Label nameLabel = new Label(e.getName());
-                Label dateLabel = new Label(e.getDate().toString());
-                Label locationLabel = new Label(e.getLocation());
-                Label typeLabel = new Label(e.getType());
+                // Affectation des noms de chaque champs
+                Label nameField = new Label(e.getName());
+                Label dateField = new Label("Date: " + e.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                Label locationField = new Label("À: " + e.getLocation());
+                Label typeField = new Label("Type: " + e.getType());
 
-                card.getChildren().addAll(nameLabel, dateLabel, locationLabel, typeLabel);
+                // Affectation des positions sur la grille de chaque champs
+                plannerCard.add(nameField,     0, 0);
+                plannerCard.add(typeField,     1, 0);
+                plannerCard.add(locationField, 0, 1);
+                plannerCard.add(dateField,     1, 1);
 
-                eventsContainer.getChildren().add(card);
+                eventsContainer.getChildren().add(plannerCard);
             }
 
         } catch (Exception e) {

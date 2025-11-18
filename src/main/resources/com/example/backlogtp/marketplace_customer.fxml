@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.Region?>
 
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.text.Text?>
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.backlogtp.ui.CustomerMarketController"
@@ -37,7 +38,8 @@
             <Label text="Bienvenue sur la marketplace Event Planner"
                    styleClass="subtitle"/>
 
-            <Label text="Tous les événements" styleClass="title"/>
+            <Text fx:id="customText"
+                  styleClass="title"/>
 
             <HBox spacing="30" alignment="CENTER">
                 <VBox fx:id="eventContainer" spacing="10" styleClass="event-container"/>
