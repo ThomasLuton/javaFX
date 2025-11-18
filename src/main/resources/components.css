@@ -31,3 +31,19 @@
 #addBtn:hover {
     -fx-background-color: linear-gradient(to right, #5AA0F2, #468CD5);
 }
+
+#planner-card {
+    -fx-background-color: linear-gradient(to right, #b6d6ff, #cde3ff);
+    -fx-padding: 15 20;
+    -fx-spacing: 30;
+
+    -fx-border-color: #9cccff;
+    -fx-border-width: 2;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-max-width: Infinity;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 10, 0.3, 0, 3);
+
+    -fx-cursor: hand;
+}
