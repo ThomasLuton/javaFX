@@ -83,6 +83,12 @@
                 </HBox>
 
             </GridPane>
+            <Label text="Mes événements" styleClass="subtitle"/>
+
+        	<VBox fx:id="eventsContainer" spacing="10">
+            <!-- On remplira en Java -->
+        	</VBox>
+            
         </VBox>
     </center>
 </BorderPane>

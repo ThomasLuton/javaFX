@@ -162,4 +162,50 @@ public class EventRepository {
     	 
     	 return events;
     }
+    
+    // Récupérer les événements crées par un organisateur en se basant sur son mail
+    
+    public List <Event> findEventsByOrganizerEmail(String email) throws SQLException {
+    	
+    	String query = """
+    	        SELECT e.*
+    	        FROM events e
+    	        JOIN users u ON e.organizer_id = u.id
+    	        WHERE u.email = ?
+    	        ORDER BY e.date ASC
+    	        """;
+    	PreparedStatement preparedStatement = connection.prepareStatement(query);
+    	preparedStatement.setString(1, email); 
+    	ResultSet rs = preparedStatement.executeQuery();
+    	
+    	List <Event> events = new ArrayList<>();
+    	
+    	while (rs.next()) {
+            String type = rs.getString("type");
+            Event event;
+
+            switch (type.toUpperCase()) {
+                case "CONCERT" -> event = new Concert();
+                case "SPECTACLE" -> event = new Spectacle();
+                case "CONFERENCE" -> event = new Conference();
+                default -> throw new ValidationException("Unknown event : " + type);
+            }
+            
+        event.setId(rs.getLong("id"));
+        event.setName(rs.getString("name"));
+        event.setDate(rs.getTimestamp("date").toLocalDateTime());
+        event.setLocation(rs.getString("location"));
+        event.setType(type);
+        
+        // récupérer l'organisateur complet (User) 
+        Long organizerId = rs.getLong("organizer_id");
+        event.setUser(users.findById(organizerId));
+        
+        event.getCategories().addAll(findByEventId(event));
+        
+        events.add(event);
+    }
+    	
+    	return events;
+    }
 }

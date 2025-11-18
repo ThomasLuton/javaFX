@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import logic.dtos.CreateCategory;
 import logic.dtos.CreateEvent;
 import logic.dtos.UserInfo;
+import logic.entities.Event;
 import logic.services.EventService;
 
 import java.io.IOException;
@@ -39,6 +40,8 @@ public class PlannerHomeController {
 
     @FXML
     private TextField eventLocationField;
+    
+   
 
     public void checkSelected() {
         RadioButton selected = (RadioButton) eventType.getSelectedToggle();
@@ -88,6 +91,21 @@ public class PlannerHomeController {
 
     @FXML
     private VBox categoriesContainer;
+    
+    private HBox createEventCard(Event event) {
+        HBox card = new HBox(20);
+        card.setId("card"); // lié au CSS components.css
+        card.setMaxWidth(600);
+
+        Label name = new Label(event.getName());
+        Label date = new Label(event.getDate().toString());
+        Label location = new Label(event.getLocation());
+        Label type = new Label(event.getType());
+
+        card.getChildren().addAll(name, date, location, type);
+        return card;
+    }
+
 
     @FXML
     private void addCategory() {
@@ -112,6 +130,47 @@ public class PlannerHomeController {
 
         newCategory.getChildren().addAll(categoryField, priceField, seatAmountField, removeBtn);
         categoriesContainer.getChildren().add(newCategory);
+    }
+    
+    @FXML
+    private VBox eventContainer;
+    
+    private void initialize() {
+        try {
+            // style des cards
+            if (eventContainer != null) {
+                eventContainer.getStylesheets().add("components.css");
+            }
+
+            // récupérer l'utilisateur connecté
+            UserInfo currentUser = PlannerApplication.staticUserInfo;
+            if (currentUser == null) {
+                System.out.println("Aucun utilisateur connecté");
+                return;
+            }
+
+            // récupérer ses événements
+            var myEvents = eventService.listEventsForOrganizer(currentUser);
+
+            // pour chaque event, créer une "card" HBox
+            for (Event e : myEvents) {
+                HBox card = new HBox(10);
+                card.setId("card");
+                card.setMaxWidth(600);
+
+                Label nameLabel = new Label(e.getName());
+                Label dateLabel = new Label(e.getDate().toString());
+                Label locationLabel = new Label(e.getLocation());
+                Label typeLabel = new Label(e.getType());
+
+                card.getChildren().addAll(nameLabel, dateLabel, locationLabel, typeLabel);
+
+                eventContainer.getChildren().add(card);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
