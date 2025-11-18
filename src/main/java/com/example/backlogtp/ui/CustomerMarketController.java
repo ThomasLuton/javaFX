@@ -1,5 +1,6 @@
 package com.example.backlogtp.ui;
 
+import com.example.backlogtp.PlannerApplication;
 import com.example.backlogtp.repositories.DataBaseConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,13 +15,16 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import logic.entities.Event;
 import logic.entities.EventCategory;
+import logic.entities.EventPlanner;
 import logic.services.EventService;
+import logic.services.ReservationService;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +37,8 @@ public class CustomerMarketController {
     private VBox selectedEventsList;
 
     private final EventService eventService = new EventService();
+    private final ReservationService reservationService = new ReservationService();
+    private final List<EventCategory> selectedCategories = new ArrayList<>();
 
     @FXML
     private void initialize() throws SQLException {
@@ -80,7 +86,8 @@ public class CustomerMarketController {
 
                 Label category = new Label(eventCategory.getName());
                 Label categoryPrice = new Label(String.valueOf(eventCategory.getPrice()) + "€");
-                Label categoryQuantity = new Label("? places"); // TODO: IMPLEMENTER LA LOGIQUE POUR RECUPERER LE NOMBRE DE PLACES
+                int qtt = reservationService.availablePlace(eventCategory);
+                Label categoryQuantity = new Label(qtt + "/" + eventCategory.getCapacity() + " places");
 
                 Button addBtn = new Button("+");
                 addBtn.setId("addBtn");
@@ -99,6 +106,7 @@ public class CustomerMarketController {
 
     @FXML
     private void logout(ActionEvent event) throws IOException {
+        PlannerApplication.staticUserInfo = null;
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent homepage = FXMLLoader.load(
                 Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))
@@ -109,6 +117,7 @@ public class CustomerMarketController {
     }
 
     public void addSelectedEvent(Event event, EventCategory eventCategory) {
+        selectedCategories.add(eventCategory);
         selectedEventsList.getStylesheets().add("components.css");
 
         GridPane newCard = new GridPane();
@@ -127,7 +136,10 @@ public class CustomerMarketController {
         Label categoryName = new Label(eventCategory.getName());
         Button removeBtn = new Button("X");
         removeBtn.setId("addBtn");
-        removeBtn.setOnAction(e -> selectedEventsList.getChildren().remove(newCard));
+        removeBtn.setOnAction(e -> {
+                    selectedEventsList.getChildren().remove(newCard);
+                    selectedCategories.remove(eventCategory);
+                });
 
         newCard.add(eventName,     0, 0);
         newCard.add(categoryName,  1, 0);
@@ -136,5 +148,14 @@ public class CustomerMarketController {
         selectedEventsList.getChildren().add(newCard);
     }
 
-
+    @FXML
+    public void validateReservations(){
+        selectedCategories.forEach(eventCategory -> {
+            try {
+                reservationService.createReservation(PlannerApplication.staticUserInfo, eventCategory);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 }

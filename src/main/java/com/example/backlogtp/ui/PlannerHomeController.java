@@ -40,6 +40,9 @@ public class PlannerHomeController {
 
     @FXML
     private TextField eventLocationField;
+
+    @FXML
+    private VBox eventsContainer;
     
    
 
@@ -70,7 +73,7 @@ public class PlannerHomeController {
                         .filter(v -> v.getId().equals("capacity"))
                         .findFirst().get();
                 Integer capacity = Integer.valueOf(capacityField.getText());
-                CreateCategory category = new CreateCategory(name, price, capacity);
+                CreateCategory category = new CreateCategory(name, capacity, price);
                 categories.add(category);
             });
             RadioButton selectedRadio = (RadioButton) eventType.getSelectedToggle();
@@ -131,15 +134,13 @@ public class PlannerHomeController {
         newCategory.getChildren().addAll(categoryField, priceField, seatAmountField, removeBtn);
         categoriesContainer.getChildren().add(newCategory);
     }
-    
+
     @FXML
-    private VBox eventContainer;
-    
     private void initialize() {
         try {
             // style des cards
-            if (eventContainer != null) {
-                eventContainer.getStylesheets().add("components.css");
+            if (eventsContainer != null) {
+                eventsContainer.getStylesheets().add("components.css");
             }
 
             // récupérer l'utilisateur connecté
@@ -150,7 +151,7 @@ public class PlannerHomeController {
             }
 
             // récupérer ses événements
-            var myEvents = eventService.listEventsForOrganizer(currentUser);
+            List<Event> myEvents = eventService.listEventsForOrganizer(currentUser);
 
             // pour chaque event, créer une "card" HBox
             for (Event e : myEvents) {
@@ -165,7 +166,7 @@ public class PlannerHomeController {
 
                 card.getChildren().addAll(nameLabel, dateLabel, locationLabel, typeLabel);
 
-                eventContainer.getChildren().add(card);
+                eventsContainer.getChildren().add(card);
             }
 
         } catch (Exception e) {
@@ -175,6 +176,7 @@ public class PlannerHomeController {
 
     @FXML
     private void logout(ActionEvent event) throws IOException {
+        PlannerApplication.staticUserInfo = null;
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent homepage = FXMLLoader.load(
                 Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))

@@ -1,6 +1,8 @@
 package com.example.backlogtp.ui;
 
+import com.example.backlogtp.PlannerApplication;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -11,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.entities.EventPlanner;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -46,6 +49,7 @@ public class CustomerHomeController {
 
     @FXML
     private void logout(ActionEvent event) throws IOException {
+        PlannerApplication.staticUserInfo = null;
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent homepage = FXMLLoader.load(
                 Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))

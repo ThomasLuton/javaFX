@@ -1,6 +1,7 @@
 package logic.tests;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.example.backlogtp.repositories.EventRepository;
@@ -66,6 +67,22 @@ public class TestEventService {
 		String email = "kenza@"; // mets un email qui existe en BDD
 
         List<Event> events = repo.findEventsByOrganizerEmail(email);
+         if (events.isEmpty()) {
+             System.out.println("Aucun événement trouvé !");
+         } else {
+             for (Event e : events) {
+                 System.out.println(e.getCategories());
+
+                 System.out.println(
+                         "Event #" + e.getId() +
+                         " | " + e.getName() +
+                         " | " + e.getDate().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")) +
+                         " | " + e.getLocation() +
+                         " | organisé par : " + e.getUser().getName() +
+                         " (" + e.getType() + ")"
+                 );
+             }
+         }
 
         if (events.isEmpty()) {
             System.out.println("Aucun événement trouvé pour cet organisateur.");

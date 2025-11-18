@@ -61,7 +61,7 @@ public class EventCategory extends AbstractDAO implements Reservable {
     }
 
 	@Override
-	public void book() {
+	public void book(Reservation reservation) {
 
 	}
 

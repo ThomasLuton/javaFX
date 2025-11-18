@@ -58,7 +58,7 @@
                 <VBox fx:id="selectedEventsList" spacing="10"/>
             </ScrollPane>
 
-            <Button text="Valider" styleClass="primary-btn"/>
+            <Button text="Valider" styleClass="primary-btn" onAction="#validateReservations"/>
         </VBox>
     </right>
 
