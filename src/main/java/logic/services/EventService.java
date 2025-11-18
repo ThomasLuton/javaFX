@@ -91,6 +91,12 @@ public class EventService {
 
         return events.findEventsByOrganizerEmail(userInfo.email());
     }
+    
+    
+    public List<Event> searchEventsForClient(String typeFilter, String locationFilter, String nameFilter) throws SQLException {
+    	
+    	return events.findUpcomingEventsFiltered(typeFilter, locationFilter, nameFilter);
+    }
 
     
     

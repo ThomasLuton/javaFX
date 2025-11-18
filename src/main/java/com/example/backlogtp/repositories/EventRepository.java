@@ -208,4 +208,94 @@ public class EventRepository {
     	
     	return events;
     }
+    
+    public List<Event> findUpcomingEventsFiltered(String typeFilter, String locationFilter, String artistFilter) 
+            throws SQLException {
+
+        StringBuilder sql = new StringBuilder("""
+            SELECT 
+                e.id AS event_id,
+                e.name AS event_name,
+                e.location AS event_location,
+                e.date AS event_date,
+                e.type AS event_type,
+                u.id AS user_id,
+                u.name AS user_name,
+                u.email AS user_email
+            FROM events e
+            JOIN users u ON u.id = e.organizer_id
+            WHERE e.date >= NOW()
+        """);
+
+        List<Object> params = new ArrayList<>();
+
+        // -- Filtre par type
+        if (typeFilter != null && !typeFilter.isBlank()) {
+            sql.append(" AND e.type = ? ");
+            params.add(typeFilter.toUpperCase());
+        }
+
+        // -- Filtre par lieu
+        if (locationFilter != null && !locationFilter.isBlank()) {
+            sql.append(" AND LOWER(e.location) LIKE LOWER(?) ");
+            params.add("%" + locationFilter + "%");
+        }
+
+        // -- Filtre par nom de l'artiste / intervenant
+        if (artistFilter != null && !artistFilter.isBlank()) {
+            sql.append(" AND LOWER(e.name) LIKE LOWER(?) ");
+            params.add("%" + artistFilter + "%");
+        }
+
+        sql.append(" ORDER BY e.date ASC ");
+
+        PreparedStatement ps = connection.prepareStatement(sql.toString());
+
+        // Remplissage dynamique
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+
+        ResultSet rs = ps.executeQuery();
+        List<Event> events = new ArrayList<>();
+
+        while (rs.next()) {
+
+            // Reconstruction de l'event
+            Event event;
+            String type = rs.getString("event_type");
+
+            switch (type.toUpperCase()) {
+                case "CONCERT" -> event = new Concert();
+                case "SPECTACLE" -> event = new Spectacle();
+                case "CONFERENCE" -> event = new Conference();
+                default -> throw new ValidationException("Unknown event : " + type);
+            }
+
+            event.setId(rs.getLong("event_id"));
+            event.setName(rs.getString("event_name"));
+            event.setLocation(rs.getString("event_location"));
+            event.setType(type);
+            event.setDate(rs.getTimestamp("event_date").toLocalDateTime());
+
+            // Organizer
+            EventPlanner planner = new EventPlanner();
+            planner.setId(rs.getLong("user_id"));
+            planner.setName(rs.getString("user_name"));
+            planner.setEmail(rs.getString("user_email"));
+
+            event.setUser(planner);
+            event.getCategories().addAll(findByEventId(event));
+
+            events.add(event);
+        }
+
+        return events;
+    }
+
+    	
+    	
+    	
+    	
+  	 
 }
