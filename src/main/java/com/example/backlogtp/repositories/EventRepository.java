@@ -13,6 +13,7 @@ import java.util.List;
 public class EventRepository {
 
     private final Connection connection = DataBaseConnection.getConnection();
+    private final UserRepository users = new UserRepository();
 
     public Long createEvent(Event event) throws SQLException {
         String query = "INSERT INTO events (name, date, location, type, organizer_id) VALUES ( ?, ?, ?, ?, ?)";
@@ -30,7 +31,7 @@ public class EventRepository {
     }
 
     public Event findById(Long id) throws SQLException{
-        String query = "SELECT * FROM events where id = ?";
+        String query = "SELECT * FROM events e where e.id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setLong(1, id);
         ResultSet rs = preparedStatement.executeQuery();
@@ -48,9 +49,29 @@ public class EventRepository {
             event.setDate(rs.getTimestamp("date").toLocalDateTime());
             event.setLocation(rs.getString("location"));
             event.setId(rs.getLong("id"));
+            event.setUser(users.findById(rs.getLong("organizer_id")));
+            event.getCategories().addAll(findByEventId(event));
             events.add(event);
         }
         return events.size() == 0 ? null: events.get(0);
+    }
+
+    public List<EventCategory> findByEventId(Event event) throws SQLException {
+        String query = "SELECT * FROM event_categories where event_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setLong(1, event.getId());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        List<EventCategory> eventCategories = new ArrayList<>();
+        while (resultSet.next()){
+            EventCategory category = new EventCategory();
+            category.setId(resultSet.getLong("id"));
+            category.setPrice(resultSet.getDouble("price"));
+            category.setCapacity(resultSet.getInt("capacity"));
+            category.setName(resultSet.getString("name"));
+            category.setEvent(event);
+            eventCategories.add(category);
+        }
+        return eventCategories;
     }
 
     public void createEventCategory(EventCategory category) throws  SQLException{
@@ -81,6 +102,7 @@ public class EventRepository {
             event.setDate(rs.getTimestamp("date").toLocalDateTime());
             event.setLocation(rs.getString("location"));
             event.setId(rs.getLong("id"));
+            event.setUser(users.findById(rs.getLong("organizer_id")));
             events.add(event);
         }
         return events.size() == 0 ? null: events.get(0);
@@ -132,6 +154,7 @@ public class EventRepository {
             
              // Associer l'event planner à l'évenement
              event.setUser(eventPlanner);
+             event.getCategories().addAll(findByEventId(event));
              
              events.add(event); //ajout à la liste
        

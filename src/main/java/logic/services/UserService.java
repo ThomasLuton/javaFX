@@ -1,10 +1,7 @@
 package logic.services;
 
 import com.example.backlogtp.repositories.UserRepository;
-import com.example.backlogtp.utils.DAO;
-import com.example.backlogtp.utils.DAOAccess;
 import com.example.backlogtp.utils.PasswordEncoder;
-import com.example.backlogtp.utils.Repository;
 import com.example.backlogtp.utils.exceptions.ValidationException;
 
 import logic.dtos.UserInfo;
@@ -15,13 +12,8 @@ import logic.entities.User;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class UserService {
-
-	private final DAOAccess daoAccess = Repository.getDaoACCESS();
 	private final UserRepository users = new UserRepository();
 	
 	public void createUser(String name, String email, String password, boolean isEventPlanner) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {

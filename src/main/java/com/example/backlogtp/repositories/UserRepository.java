@@ -40,4 +40,22 @@ public class UserRepository {
         return users.size() == 0 ? null: users.get(0);
     }
 
+    public User findById(Long id) throws SQLException {
+        String query = "SELECT * FROM users WHERE id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setLong(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        List<User> users = new ArrayList<>();
+        while (resultSet.next()){
+            String status = resultSet.getString("status");
+            User user = status.equals("client") ? new Client(): new EventPlanner();
+            user.setName(resultSet.getString("name"));
+            user.setEmail(resultSet.getString("email"));
+            user.setPassword(resultSet.getString("password"));
+            user.setId(resultSet.getLong("id"));
+            users.add(user);
+        }
+        return users.size() == 0 ? null: users.get(0);
+    }
+
 }

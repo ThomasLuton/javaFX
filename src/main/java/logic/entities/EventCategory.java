@@ -1,6 +1,9 @@
 package logic.entities;
 
-public class EventCategory {
+import com.example.backlogtp.utils.AbstractDAO;
+import logic.services.Reservable;
+
+public class EventCategory extends AbstractDAO implements Reservable {
 
     private String name;   // "Standard", "VIP"…
     private double price;  // prix d'un ticket
@@ -56,4 +59,19 @@ public class EventCategory {
                 ", capacity=" + capacity +
                 '}';
     }
+
+	@Override
+	public void book() {
+
+	}
+
+	@Override
+	public boolean isBookable() {
+		return false;
+	}
+
+	@Override
+	public void cancel() {
+
+	}
 }
