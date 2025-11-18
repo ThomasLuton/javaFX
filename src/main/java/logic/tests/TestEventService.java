@@ -41,11 +41,14 @@ public class TestEventService {
 //	}
 		
 		 List<Event> events = eventService.listUpcomingEventsForClient();
+         Event event = new EventRepository().findById(2L);
+         System.out.println(event);
 
          if (events.isEmpty()) {
              System.out.println("Aucun événement trouvé !");
          } else {
              for (Event e : events) {
+                 System.out.println(e.getCategories());
                  System.out.println(
                          "Event #" + e.getId() +
                          " | " + e.getName() +

@@ -50,15 +50,28 @@ public class EventRepository {
             event.setLocation(rs.getString("location"));
             event.setId(rs.getLong("id"));
             event.setUser(users.findById(rs.getLong("organizer_id")));
-            event.getCategories().addAll(findByEventId(id));
+            event.getCategories().addAll(findByEventId(event));
             events.add(event);
         }
         return events.size() == 0 ? null: events.get(0);
     }
 
-    public List<EventCategory> findByEventId(Long id){
-        String query = "SELECT * FROM event_categories ";
-        return null;
+    public List<EventCategory> findByEventId(Event event) throws SQLException {
+        String query = "SELECT * FROM event_categories where event_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setLong(1, event.getId());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        List<EventCategory> eventCategories = new ArrayList<>();
+        while (resultSet.next()){
+            EventCategory category = new EventCategory();
+            category.setId(resultSet.getLong("id"));
+            category.setPrice(resultSet.getDouble("price"));
+            category.setCapacity(resultSet.getInt("capacity"));
+            category.setName(resultSet.getString("name"));
+            category.setEvent(event);
+            eventCategories.add(category);
+        }
+        return eventCategories;
     }
 
     public void createEventCategory(EventCategory category) throws  SQLException{
@@ -141,6 +154,7 @@ public class EventRepository {
             
              // Associer l'event planner à l'évenement
              event.setUser(eventPlanner);
+             event.getCategories().addAll(findByEventId(event));
              
              events.add(event); //ajout à la liste
        
