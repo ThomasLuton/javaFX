@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.Region?>
 
+<?import javafx.scene.control.ScrollPane?>
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.backlogtp.ui.CustomerMarketController"
@@ -39,10 +40,26 @@
             <Label text="Tous les événements" styleClass="title"/>
 
             <HBox spacing="30" alignment="CENTER">
-                <VBox fx:id="eventContainer" spacing="10"/>
+                <VBox fx:id="eventContainer" spacing="10" styleClass="event-container"/>
             </HBox>
 
         </VBox>
     </center>
+
+    <right>
+        <VBox fx:id="selectedEventsBox" styleClass="sidebar" spacing="15">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Votre Panier" styleClass="sidebar-title"/>
+
+            <ScrollPane fitToWidth="true" styleClass="sidebar-scroll">
+                <VBox fx:id="selectedEventsList" spacing="10"/>
+            </ScrollPane>
+
+            <Button text="Valider" styleClass="primary-btn"/>
+        </VBox>
+    </right>
 
 </BorderPane>
