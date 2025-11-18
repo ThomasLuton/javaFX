@@ -25,7 +25,7 @@
             </padding>
             <Label text="Event Planner Dashboard" styleClass="header-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Logout" styleClass="header-btn"/>
+            <Button text="Logout" styleClass="header-btn" onAction="#logout"/>
         </HBox>
     </top>
 

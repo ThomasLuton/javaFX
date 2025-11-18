@@ -22,7 +22,7 @@
 
             <Label text="Event Planner" styleClass="header-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Logout" styleClass="header-btn"/>
+            <Button text="Logout" styleClass="header-btn" onAction="#logout"/>
         </HBox>
     </top>
 
