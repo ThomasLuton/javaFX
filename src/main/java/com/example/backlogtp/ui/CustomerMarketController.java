@@ -12,10 +12,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.entities.Event;
+import logic.services.EventService;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 public class CustomerMarketController {
@@ -23,37 +28,43 @@ public class CustomerMarketController {
     @FXML
     private VBox eventContainer;
 
-    @FXML
-    private void initialize() {
-        eventContainer.getStylesheets().add("components.css");
+    private final EventService eventService = new EventService();
 
-        HBox newEvent =  new HBox(5);
-        newEvent.setMaxWidth(500);
-        newEvent.setId("card");
+    @FXML
+    private void initialize() throws SQLException {
+        eventContainer.getStylesheets().add("components.css");
 
         // TODO: UTILISER LA LISTE D'EVENT POUR AFFICHER LE MUR
 
-        Label nameField = new Label();
-        nameField.setText("Nom de l'event");
+        // nom, date, location, organisateur, categories (-> nom, prix et capacité)
+        List<Event> events = eventService.listUpcomingEventsForClient();
 
-        Label priceField = new Label();
-        priceField.setText("Prix");
+        for (Event event : events) {
 
-        Label dateField = new Label();
-        dateField.setText("Date");
+            HBox newEvent =  new HBox(5);
+            newEvent.setMaxWidth(500);
+            newEvent.setId("card");
 
-        Label locationField = new Label();
-        locationField.setText("Emplacement");
+            Label nameField = new Label();
+            nameField.setText(event.getName());
 
-        Label typeField = new Label();
-        typeField.setText("Type");
+            Label dateField = new Label();
+            dateField.setText(event.getDate().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
 
-        Button addBtn = new Button("+");
-        addBtn.setId("addBtn");
-        addBtn.setOnAction(System.out::println);
+            Label locationField = new Label();
+            locationField.setText(event.getLocation());
 
-        newEvent.getChildren().addAll(nameField, priceField, dateField, locationField, typeField, addBtn);
-        eventContainer.getChildren().add(newEvent);
+            Label typeField = new Label();
+            typeField.setText(event.getType());
+
+            Button addBtn = new Button("+");
+            addBtn.setId("addBtn");
+            addBtn.setOnAction(System.out::println);
+
+            newEvent.getChildren().addAll(nameField, dateField, locationField, typeField, addBtn);
+            eventContainer.getChildren().add(newEvent);
+
+        }
     }
 
     @FXML
