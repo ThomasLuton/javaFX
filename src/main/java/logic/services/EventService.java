@@ -12,6 +12,7 @@ import com.example.backlogtp.utils.exceptions.ValidationException;
 import logic.dtos.CreateCategory;
 import logic.dtos.CreateEvent;
 import logic.dtos.UserInfo;
+import logic.entities.User;
 import logic.entities.Concert;
 import logic.entities.Conference;
 import logic.entities.Event;
@@ -81,6 +82,16 @@ public class EventService {
     public List<Event> listUpcomingEventsForClient() throws SQLException {
         return events.findUpcomingEventsSortedByDate();
     }
+    
+    public List<Event> listEventsForOrganizer(UserInfo userInfo) throws Exception {
+
+        if (!"eventPlanner".equalsIgnoreCase(userInfo.type())) {
+            throw new ValidationException("Only event planners can see their events");
+        }
+
+        return events.findEventsByOrganizerEmail(userInfo.email());
+    }
+
     
     
 }
