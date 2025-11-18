@@ -47,7 +47,7 @@ public abstract class Event extends AbstractDAO {
 		}
 
 		public List<EventCategory> getCategories() {
-			return Collections.unmodifiableList(categories);
+			return categories;
 		}
 
 	public User getUser() {

@@ -1,6 +1,6 @@
 package com.example.backlogtp.utils;
 
-public class AbstractDAO implements DAO {
+public class AbstractDAO {
     private Long id;
 
     public Long getId() {

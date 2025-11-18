@@ -1,16 +1,17 @@
 package logic.tests;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.backlogtp.repositories.EventRepository;
+import com.example.backlogtp.repositories.ReservationRepository;
 import logic.dtos.UserInfo;
 import logic.entities.Event;
 import logic.entities.EventCategory;
 import logic.services.EventService;
 
 public class TestEventService {
-	
 	public static void main(String[] args) {
 		try {
 		EventService eventService = new EventService();
