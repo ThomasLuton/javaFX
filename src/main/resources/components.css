@@ -17,3 +17,15 @@
     -fx-font-weight: 500;
 }
 
+#addBtn {
+    -fx-background-color: linear-gradient(to right, #4A90E2, #357ABD);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-padding: 5 10;
+}
+
+#addBtn:hover {
+    -fx-background-color: linear-gradient(to right, #5AA0F2, #468CD5);
+}
+
