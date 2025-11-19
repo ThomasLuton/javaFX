@@ -27,7 +27,6 @@ public class ReservationService {
             throw new PlacesInsuffisantesException();
         }
         reservation.setEvent(category);
-        category.book(reservation);
-        reservations.createReservation(reservation);
+        reservation.book();
     }
 }

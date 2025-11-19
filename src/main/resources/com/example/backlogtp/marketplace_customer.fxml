@@ -13,6 +13,7 @@
 <?import javafx.scene.text.Text?>
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="root"
             fx:controller="com.example.backlogtp.ui.CustomerMarketController"
             stylesheets="@home.css">
 

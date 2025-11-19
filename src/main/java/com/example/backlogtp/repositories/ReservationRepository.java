@@ -64,4 +64,17 @@ public class ReservationRepository {
         preparedStatement.setString(4, reservation.getStatus());
         preparedStatement.executeUpdate();
     }
+    public void pay(Reservation reservation) throws SQLException{
+        String query = "UPDATE reservations SET status='PAID' where id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setLong(1, reservation.getId());
+        preparedStatement.executeUpdate();
+    }
+
+    public void delete(Reservation reservation) throws SQLException{
+        String query = "DELETE FROM reservations where id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setLong(1, reservation.getId());
+        preparedStatement.executeUpdate();
+    }
 }

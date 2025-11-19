@@ -9,6 +9,7 @@ import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -39,6 +40,9 @@ public class CustomerMarketController {
 
     @FXML
     private VBox selectedEventsList;
+
+    @FXML
+    public BorderPane root;
 
     private final EventService eventService = new EventService();
     private final ReservationService reservationService = new ReservationService();
@@ -162,7 +166,19 @@ public class CustomerMarketController {
         selectedCategories.forEach(eventCategory -> {
             try {
                 reservationService.createReservation(PlannerApplication.staticUserInfo, eventCategory);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText(null);
+                alert.setContentText("Place(s) réservée(s) avec succès");
+                alert.showAndWait();
+
+                Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/marketplace_customer.fxml")));
+                Stage stage = (Stage) root.getScene().getWindow();
+                stage.setScene(new Scene(refreshed));
+                stage.setMaximized(true);
+                stage.show();
             } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });

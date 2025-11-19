@@ -1,13 +1,19 @@
 package logic.entities;
 
+import com.example.backlogtp.repositories.EventRepository;
+import com.example.backlogtp.repositories.ReservationRepository;
 import com.example.backlogtp.utils.AbstractDAO;
+import com.example.backlogtp.utils.exceptions.AnnulationTardiveException;
 import logic.services.Payable;
 import logic.services.Reservable;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAmount;
 import java.util.Objects;
 
-public class Reservation extends AbstractDAO implements Payable {
+public class Reservation extends AbstractDAO implements Payable, Reservable {
 
     private User user;
     private EventCategory event;
@@ -59,11 +65,40 @@ public class Reservation extends AbstractDAO implements Payable {
 
     @Override
     public boolean isBilled() {
-        return false;
+        return this.status.equals("PAID");
     }
 
     @Override
-    public void bill() {
+    public void bill(Long cardNumber, String nameOnCard) {
+        if(cardNumber.longValue() < 1000000000000000L){
+            throw new RuntimeException("Card number invalid");
+        }
+        if(!nameOnCard.equals(this.user.getName())){
+            throw new RuntimeException("Name invalid");
+        }
+        try {
+            new ReservationRepository().pay(this);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @Override
+    public void book() throws SQLException {
+        new ReservationRepository().createReservation(this);
+    }
+
+    @Override
+    public boolean isBookable() throws SQLException {
+        int totalOfReservation = new ReservationRepository().countReservationFromOneEventCategory(event);
+        return event.getCapacity() - totalOfReservation > 0;
+    }
+
+    @Override
+    public void cancel() throws SQLException {
+        if(getReservationDate().isAfter(LocalDateTime.now().minusDays(1L))){
+            throw new AnnulationTardiveException();
+        }
+        new ReservationRepository().delete(this);
     }
 }

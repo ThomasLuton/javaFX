@@ -2,8 +2,9 @@ package logic.entities;
 
 import com.example.backlogtp.utils.AbstractDAO;
 import logic.services.Reservable;
+import logic.services.ReservationService;
 
-public class EventCategory extends AbstractDAO implements Reservable {
+public class EventCategory extends AbstractDAO {
 
     private String name;   // "Standard", "VIP"…
     private double price;  // prix d'un ticket
@@ -59,19 +60,4 @@ public class EventCategory extends AbstractDAO implements Reservable {
                 ", capacity=" + capacity +
                 '}';
     }
-
-	@Override
-	public void book(Reservation reservation) {
-
-	}
-
-	@Override
-	public boolean isBookable() {
-		return false;
-	}
-
-	@Override
-	public void cancel() {
-
-	}
 }
