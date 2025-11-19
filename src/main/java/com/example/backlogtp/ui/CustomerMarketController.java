@@ -55,10 +55,11 @@ public class CustomerMarketController {
         // nom, date, location, organisateur, categories (-> nom, prix et capacité)
         List<Event> events = eventService.listUpcomingEventsForClient();
 
-        if(events.isEmpty()){
+        if (events.isEmpty()) {
             customText.setText("No events found");
+        } else {
+            customText.setText("Tous les événements");
         }
-        customText.setText("Tous les événements");
 
         for (Event event : events) {
 
