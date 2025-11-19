@@ -52,7 +52,7 @@ public class CustomerMarketController {
         List<Event> events = eventService.listUpcomingEventsForClient();
 
         if (events.isEmpty()) {
-            customText.setText("No events found");
+            customText.setText("Aucun événement trouvé");
         } else {
             customText.setText("Tous les événements");
         }
@@ -175,6 +175,16 @@ public class CustomerMarketController {
         Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml")));
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setScene(new Scene(refreshed));
+        stage.setMaximized(true);
+        stage.show();
+    }
+
+    public void goToProfile(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent homepage = FXMLLoader.load(
+                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
+        );
+        stage.setScene(new Scene(homepage));
         stage.setMaximized(true);
         stage.show();
     }
