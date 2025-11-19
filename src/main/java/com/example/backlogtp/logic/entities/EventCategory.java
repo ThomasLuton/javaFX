@@ -1,8 +1,6 @@
-package logic.entities;
+package com.example.backlogtp.logic.entities;
 
 import com.example.backlogtp.utils.AbstractDAO;
-import logic.services.Reservable;
-import logic.services.ReservationService;
 
 public class EventCategory extends AbstractDAO {
 

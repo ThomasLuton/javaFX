@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.Region?>
 
+<?import javafx.scene.control.ScrollPane?>
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.backlogtp.ui.CustomerHomeController"
@@ -22,6 +23,7 @@
 
             <Label text="Event Planner" styleClass="header-title"/>
             <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Market place" styleClass="header-btn" onAction="#goToMarket"/>
             <Button text="Logout" styleClass="header-btn" onAction="#logout"/>
         </HBox>
     </top>
@@ -39,7 +41,9 @@
             <Label text="Vos événements" styleClass="title"/>
 
             <HBox spacing="30" alignment="CENTER">
-                <VBox fx:id="eventContainer" spacing="10"/>
+                <ScrollPane fitToWidth="true" styleClass="sidebar-scroll">
+                    <VBox fx:id="eventContainer" spacing="10"/>
+                </ScrollPane>
             </HBox>
 
         </VBox>

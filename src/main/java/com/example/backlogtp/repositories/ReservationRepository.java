@@ -1,17 +1,17 @@
 package com.example.backlogtp.repositories;
 
-import logic.entities.Event;
-import logic.entities.EventCategory;
-import logic.entities.Reservation;
+import com.example.backlogtp.logic.entities.Event;
+import com.example.backlogtp.logic.entities.EventCategory;
+import com.example.backlogtp.logic.entities.Reservation;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationRepository {
     private final Connection connection = DataBaseConnection.getConnection();
     private final UserRepository users = new UserRepository();
+    private final EventRepository events = new EventRepository();
 
     public List<Reservation> findAllByEvent(Event event) throws SQLException{
         List<Reservation> reservations = new ArrayList<>();
@@ -36,6 +36,24 @@ public class ReservationRepository {
             reservation.setId(rs.getLong("id"));
             reservation.setUser(users.findById(rs.getLong("user_id")));
             reservation.setEvent(eventCategory);
+            reservation.setStatus(rs.getString("status"));
+            reservation.setReservationDate(rs.getTimestamp("reservation_date").toLocalDateTime());
+            reservations.add(reservation);
+        }
+        return reservations;
+    }
+
+    public List<Reservation> findAllByUserId(Long id) throws SQLException {
+        String query = "SELECT * FROM reservations WHERE user_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setLong(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+        List<Reservation> reservations = new ArrayList<>();
+        while (rs.next()){
+            Reservation reservation = new Reservation();
+            reservation.setId(rs.getLong("id"));
+            reservation.setUser(users.findById(id));
+            reservation.setEvent(events.findEventCategoryById(rs.getLong("event_category_id")));
             reservation.setStatus(rs.getString("status"));
             reservation.setReservationDate(rs.getTimestamp("reservation_date").toLocalDateTime());
             reservations.add(reservation);

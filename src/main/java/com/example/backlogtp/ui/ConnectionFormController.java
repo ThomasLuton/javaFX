@@ -13,8 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import logic.dtos.UserInfo;
-import logic.services.UserService;
+import com.example.backlogtp.logic.dtos.UserInfo;
+import com.example.backlogtp.logic.services.UserService;
 
 import java.io.IOException;
 import java.util.Objects;

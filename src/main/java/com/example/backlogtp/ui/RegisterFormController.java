@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import logic.services.UserService;
+import com.example.backlogtp.logic.services.UserService;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;

@@ -1,4 +1,4 @@
-package logic.services;
+package com.example.backlogtp.logic.services;
 
 public interface Payable {
 

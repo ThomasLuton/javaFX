@@ -1,23 +1,20 @@
-package logic.services;
+package com.example.backlogtp.logic.services;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.backlogtp.repositories.EventRepository;
 import com.example.backlogtp.repositories.UserRepository;
 import com.example.backlogtp.utils.exceptions.ValidationException;
 
-import logic.dtos.CreateCategory;
-import logic.dtos.CreateEvent;
-import logic.dtos.UserInfo;
-import logic.entities.User;
-import logic.entities.Concert;
-import logic.entities.Conference;
-import logic.entities.Event;
-import logic.entities.EventCategory;
-import logic.entities.Spectacle;
+import com.example.backlogtp.logic.dtos.CreateEvent;
+import com.example.backlogtp.logic.dtos.UserInfo;
+import com.example.backlogtp.logic.entities.Concert;
+import com.example.backlogtp.logic.entities.Conference;
+import com.example.backlogtp.logic.entities.Event;
+import com.example.backlogtp.logic.entities.EventCategory;
+import com.example.backlogtp.logic.entities.Spectacle;
 
 public class EventService {
 

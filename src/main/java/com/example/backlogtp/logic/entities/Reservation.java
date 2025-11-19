@@ -1,17 +1,13 @@
-package logic.entities;
+package com.example.backlogtp.logic.entities;
 
-import com.example.backlogtp.repositories.EventRepository;
 import com.example.backlogtp.repositories.ReservationRepository;
 import com.example.backlogtp.utils.AbstractDAO;
 import com.example.backlogtp.utils.exceptions.AnnulationTardiveException;
-import logic.services.Payable;
-import logic.services.Reservable;
+import com.example.backlogtp.logic.services.Payable;
+import com.example.backlogtp.logic.services.Reservable;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.TemporalAmount;
-import java.util.Objects;
 
 public class Reservation extends AbstractDAO implements Payable, Reservable {
 
@@ -96,8 +92,8 @@ public class Reservation extends AbstractDAO implements Payable, Reservable {
 
     @Override
     public void cancel() throws SQLException {
-        if(getReservationDate().isAfter(LocalDateTime.now().minusDays(1L))){
-            throw new AnnulationTardiveException();
+        if(event.getEvent().getDate().minusDays(1L).isBefore(LocalDateTime.now())){
+            throw new AnnulationTardiveException("On ne peut pas annuler une réservation moins de 24h avant l'évenement");
         }
         new ReservationRepository().delete(this);
     }

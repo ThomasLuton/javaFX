@@ -1,6 +1,4 @@
-package logic.services;
-
-import logic.entities.Reservation;
+package com.example.backlogtp.logic.services;
 
 import java.sql.SQLException;
 

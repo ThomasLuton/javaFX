@@ -1,14 +1,15 @@
-package logic.services;
+package com.example.backlogtp.logic.services;
 
 import com.example.backlogtp.repositories.ReservationRepository;
 import com.example.backlogtp.repositories.UserRepository;
 import com.example.backlogtp.utils.exceptions.PlacesInsuffisantesException;
-import logic.dtos.UserInfo;
-import logic.entities.EventCategory;
-import logic.entities.Reservation;
+import com.example.backlogtp.logic.dtos.UserInfo;
+import com.example.backlogtp.logic.entities.EventCategory;
+import com.example.backlogtp.logic.entities.Reservation;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReservationService {
 
@@ -28,5 +29,9 @@ public class ReservationService {
         }
         reservation.setEvent(category);
         reservation.book();
+    }
+
+    public List<Reservation> findAllFromOneUser(Long userId) throws SQLException {
+        return reservations.findAllByUserId(userId);
     }
 }

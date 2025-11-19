@@ -1,4 +1,4 @@
-package logic.entities;
+package com.example.backlogtp.logic.entities;
 
 public class Concert extends Event {
 	

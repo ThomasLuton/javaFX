@@ -1,7 +1,6 @@
 package com.example.backlogtp.ui;
 
 import com.example.backlogtp.PlannerApplication;
-import com.example.backlogtp.repositories.DataBaseConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,15 +14,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import logic.entities.Event;
-import logic.entities.EventCategory;
-import logic.entities.EventPlanner;
-import logic.services.EventService;
-import logic.services.ReservationService;
+import com.example.backlogtp.logic.entities.Event;
+import com.example.backlogtp.logic.entities.EventCategory;
+import com.example.backlogtp.logic.services.EventService;
+import com.example.backlogtp.logic.services.ReservationService;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -176,7 +172,7 @@ public class CustomerMarketController {
         alert.setContentText("Place(s) réservée(s) avec succès");
         alert.showAndWait();
 
-        Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/marketplace_customer.fxml")));
+        Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml")));
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setScene(new Scene(refreshed));
         stage.setMaximized(true);

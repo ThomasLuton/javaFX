@@ -1,13 +1,12 @@
 package com.example.backlogtp.repositories;
 
-import logic.entities.Client;
-import logic.entities.EventPlanner;
-import logic.entities.User;
+import com.example.backlogtp.logic.entities.Client;
+import com.example.backlogtp.logic.entities.EventPlanner;
+import com.example.backlogtp.logic.entities.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class UserRepository {
 

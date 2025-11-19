@@ -1,4 +1,4 @@
-package logic.entities;
+package com.example.backlogtp.logic.entities;
 
 import com.example.backlogtp.utils.AbstractDAO;
 

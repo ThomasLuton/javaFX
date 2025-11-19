@@ -1,12 +1,9 @@
 package com.example.backlogtp.repositories;
 
 import com.example.backlogtp.utils.exceptions.ValidationException;
-import logic.entities.*;
+import com.example.backlogtp.logic.entities.*;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +79,24 @@ public class EventRepository {
         preparedStatement.setDouble(3, category.getPrice());
         preparedStatement.setInt(4, category.getCapacity());
         preparedStatement.executeUpdate();
+    }
+
+    public EventCategory findEventCategoryById(Long id) throws SQLException {
+        String query = "SELECT * FROM event_categories e where e.id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setLong(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+        List<EventCategory> categories = new ArrayList<>();
+        while (rs.next()){
+            EventCategory ec = new EventCategory();
+            ec.setEvent(findById(rs.getLong("event_id")));
+            ec.setName(rs.getString("name"));
+            ec.setId(rs.getLong("id"));
+            ec.setCapacity(rs.getInt("capacity"));
+            ec.setPrice(rs.getDouble("price"));
+            categories.add(ec);
+        }
+        return categories.size() == 0 ? null: categories.get(0);
     }
 
     public Event findLast()  throws  SQLException{

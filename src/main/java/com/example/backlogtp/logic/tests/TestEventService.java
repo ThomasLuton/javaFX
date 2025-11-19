@@ -1,14 +1,9 @@
-package logic.tests;
+package com.example.backlogtp.logic.tests;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import com.example.backlogtp.repositories.EventRepository;
-import logic.dtos.UserInfo;
-import logic.entities.Event;
-import logic.entities.EventCategory;
-import logic.services.EventService;
+import com.example.backlogtp.logic.entities.Event;
+import com.example.backlogtp.logic.services.EventService;
 
 public class TestEventService {
 	

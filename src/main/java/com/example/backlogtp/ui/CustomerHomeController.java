@@ -1,21 +1,28 @@
 package com.example.backlogtp.ui;
 
 import com.example.backlogtp.PlannerApplication;
+import com.example.backlogtp.utils.exceptions.AnnulationTardiveException;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import logic.entities.EventPlanner;
+import com.example.backlogtp.logic.entities.Reservation;
+import com.example.backlogtp.logic.services.ReservationService;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class CustomerHomeController {
@@ -23,28 +30,62 @@ public class CustomerHomeController {
     @FXML
     private VBox eventContainer;
 
-    @FXML
-    private void initialize() {
-        eventContainer.getStylesheets().add("components.css");
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationService reservationService = new ReservationService();
 
+    @FXML
+    private void initialize() throws SQLException {
+        reservations.addAll(reservationService.findAllFromOneUser(PlannerApplication.staticUserInfo.id()));
         HBox newEvent =  new HBox(5);
         newEvent.setMaxWidth(500);
         newEvent.setId("card");
 
-        Label nameField = new Label();
-        nameField.setText("Nom de l'event");
-
-        Label priceField = new Label();
-        priceField.setText("Prix");
-
-        Label locationField = new Label();
-        locationField.setText("Emplacement");
-
-        Label typeField = new Label();
-        typeField.setText("Type");
-
-        newEvent.getChildren().addAll(nameField, priceField, locationField, typeField);
         eventContainer.getChildren().add(newEvent);
+        reservations.forEach(reservation -> addReservation(reservation));
+    }
+
+    private void addReservation(Reservation reservation){
+        GridPane newCard = new GridPane();
+        newCard.getStyleClass().add("side-card");
+
+        ColumnConstraints nameCol = new ColumnConstraints(150);
+        ColumnConstraints categoryCol = new ColumnConstraints();
+        categoryCol.setHgrow(Priority.ALWAYS);
+        ColumnConstraints buttonCol = new ColumnConstraints();
+        buttonCol.setMinWidth(Region.USE_PREF_SIZE);
+        buttonCol.setHalignment(HPos.RIGHT);
+
+        newCard.getColumnConstraints().addAll(nameCol, categoryCol, buttonCol);
+
+        Label eventName = new Label(reservation.getEvent().getEvent().getName());
+        Label categoryName = new Label(reservation.getEvent().getName());
+        Label date = new Label(reservation.getEvent().getEvent().getDate().format(DateTimeFormatter.ofPattern("dd/MM:YYYY")));
+        Label status = new Label(reservation.getStatus());
+        Button bill = new Button("Payer");
+        bill.setOnMouseClicked(mouseEvent -> {
+            openPaiementScreen(reservation);
+        });
+        Button cancel = new Button("Annuler");
+        cancel.setOnMouseClicked(mouseEvent -> {
+            try {
+                reservation.cancel();
+                reservations.remove(reservation);
+            } catch (AnnulationTardiveException | SQLException e) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText(e.getClass().getSimpleName());
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
+        });
+
+        newCard.add(eventName,     0, 0);
+        newCard.add(categoryName,  1, 0);
+        newCard.add(date, 2, 0);
+        newCard.add(status, 3, 0);
+        newCard.add(bill, 4,0);
+        newCard.add(cancel, 5,0);
+
+        eventContainer.getChildren().add(newCard);
     }
 
     @FXML
@@ -57,6 +98,24 @@ public class CustomerHomeController {
         stage.setScene(new Scene(homepage));
         stage.setMaximized(true);
         stage.show();
+    }
+
+    @FXML
+    private void goToMarket(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent homepage = FXMLLoader.load(
+                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/marketPlace_customer.fxml"))
+        );
+        stage.setScene(new Scene(homepage));
+        stage.setMaximized(true);
+        stage.show();
+    }
+
+    private void openPaiementScreen(Reservation reservation){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("File ton fric, chacal");
+        alert.setContentText("Non je déconne j'ai rien implémenter pour l'instant");
+        alert.showAndWait();
     }
 
 }

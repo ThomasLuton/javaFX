@@ -1,4 +1,4 @@
-package logic.dtos;
+package com.example.backlogtp.logic.dtos;
 
 import java.time.LocalDateTime;
 import java.util.List;

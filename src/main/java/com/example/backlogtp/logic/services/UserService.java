@@ -1,13 +1,13 @@
-package logic.services;
+package com.example.backlogtp.logic.services;
 
 import com.example.backlogtp.repositories.UserRepository;
 import com.example.backlogtp.utils.PasswordEncoder;
 import com.example.backlogtp.utils.exceptions.ValidationException;
 
-import logic.dtos.UserInfo;
-import logic.entities.Client;
-import logic.entities.EventPlanner;
-import logic.entities.User;
+import com.example.backlogtp.logic.dtos.UserInfo;
+import com.example.backlogtp.logic.entities.Client;
+import com.example.backlogtp.logic.entities.EventPlanner;
+import com.example.backlogtp.logic.entities.User;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -70,7 +70,7 @@ public class UserService {
 		if(!new PasswordEncoder().matches(password, user.getPassword())){
 			throw new ValidationException("Wrong credentials");
 		}
-	    return new UserInfo(user.getName(), user.getEmail(), user.getStatus());
+	    return new UserInfo(user.getName(), user.getEmail(), user.getStatus(), user.getId());
 	}
 
 
