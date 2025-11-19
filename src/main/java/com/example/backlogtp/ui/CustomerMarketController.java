@@ -163,25 +163,23 @@ public class CustomerMarketController {
     }
 
     @FXML
-    public void validateReservations(){
+    public void validateReservations() throws IOException {
         selectedCategories.forEach(eventCategory -> {
             try {
                 reservationService.createReservation(PlannerApplication.staticUserInfo, eventCategory);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText(null);
-                alert.setContentText("Place(s) réservée(s) avec succès");
-                alert.showAndWait();
-
-                Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/marketplace_customer.fxml")));
-                Stage stage = (Stage) root.getScene().getWindow();
-                stage.setScene(new Scene(refreshed));
-                stage.setMaximized(true);
-                stage.show();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setContentText("Place(s) réservée(s) avec succès");
+        alert.showAndWait();
+
+        Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/marketplace_customer.fxml")));
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.setScene(new Scene(refreshed));
+        stage.setMaximized(true);
+        stage.show();
     }
 }
