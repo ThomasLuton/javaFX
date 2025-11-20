@@ -85,8 +85,25 @@
     -fx-font-size: 14px;
 }
 
+.event-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
 .form-container {
     -fx-background-color: white;
     -fx-background-radius: 15;
     -fx-padding: 40;
+}
+
+.small-btn {
+    -fx-background-color: linear-gradient(to right, #4A90E2, #357ABD);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-padding: 4 8;
+}
+
+.small-btn:hover {
+    -fx-background-color: linear-gradient(to right, #5AA0F2, #468CD5);
 }

@@ -106,5 +106,5 @@
 }
 
 .event-container {
-    -fx-max-width: Infinity;
+    -fx-max-width: 700;
 }

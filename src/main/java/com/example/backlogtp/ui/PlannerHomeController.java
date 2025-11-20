@@ -1,6 +1,8 @@
 package com.example.backlogtp.ui;
 
 import com.example.backlogtp.PlannerApplication;
+import com.example.backlogtp.logic.entities.EventCategory;
+import com.example.backlogtp.repositories.ReservationRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +38,12 @@ public class PlannerHomeController {
     public Text eventPresenceText;
 
     @FXML
+    public VBox incomeContainer;
+
+    @FXML
+    public Label totalIncome;
+
+    @FXML
     private ToggleGroup eventType;
 
     @FXML
@@ -56,14 +64,7 @@ public class PlannerHomeController {
     @FXML
     private Text customText;
 
-    public void checkSelected() {
-        RadioButton selected = (RadioButton) eventType.getSelectedToggle();
-        if (selected != null) {
-            System.out.println("Choix : " + selected.getText());
-        } else {
-            System.out.println("Aucun choix sélectionné");
-        }
-    }
+    private ReservationRepository reservationRepository = new ReservationRepository();
 
     @FXML
     private void createEvent() {
@@ -111,7 +112,7 @@ public class PlannerHomeController {
 
         } catch (Exception e){
             customText.setFill(Color.FIREBRICK);
-            customText.setText("Erreur dans la création de l'événement");
+            customText.setText(e.getMessage());
         }
     }
     
@@ -149,6 +150,7 @@ public class PlannerHomeController {
 
 
         Button removeBtn = new Button("X");
+        removeBtn.getStyleClass().add("small-btn");
         removeBtn.setOnAction(e -> categoriesContainer.getChildren().remove(newCategory));
 
         newCategory.getChildren().addAll(categoryField, priceField, seatAmountField, removeBtn);
@@ -158,12 +160,9 @@ public class PlannerHomeController {
     @FXML
     private void initialize() {
         try {
-            addCategory();
-            // style des cards
             if (eventsContainer != null) {
                 eventsContainer.getStylesheets().add("components.css");
             }
-
             // récupérer l'utilisateur connecté
             UserInfo currentUser = PlannerApplication.staticUserInfo;
             if (currentUser == null) {
@@ -171,42 +170,95 @@ public class PlannerHomeController {
                 return;
             }
 
-            // récupérer ses événements
-            List<Event> myEvents = eventService.listEventsForOrganizer(currentUser);
-
-            if (myEvents.isEmpty()) {
-                eventPresenceText.setText("Vous n'avez pas encore créé d'événements.");
-            }
-
-            // pour chaque event, créer une "card" HBox
-            for (Event e : myEvents) {
-                // Card linéaire pour les informations générales des events
-                GridPane plannerCard = new GridPane();
-                plannerCard.setId("card");
-                plannerCard.setHgap(10);
-                plannerCard.setVgap(20);
-                ColumnConstraints name = new ColumnConstraints(160);
-                ColumnConstraints date = new ColumnConstraints(160);
-                plannerCard.getColumnConstraints().addAll(name, date);
-
-                // Affectation des noms de chaque champs
-                Label nameField = new Label(e.getName());
-                Label dateField = new Label("Date: " + e.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                Label locationField = new Label("À: " + e.getLocation());
-                Label typeField = new Label("Type: " + e.getType());
-
-                // Affectation des positions sur la grille de chaque champs
-                plannerCard.add(nameField,     0, 0);
-                plannerCard.add(typeField,     1, 0);
-                plannerCard.add(locationField, 0, 1);
-                plannerCard.add(dateField,     1, 1);
-
-                eventsContainer.getChildren().add(plannerCard);
-            }
+            // charger toutes les fonctionnalités
+            addCategory();
+            addPlannerEvents(currentUser);
+            addIncomes(currentUser);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void addPlannerEvents(UserInfo currentUser) throws Exception {
+
+        // récupérer les événements du planner actuel
+        List<Event> myEvents = eventService.listEventsForOrganizer(currentUser);
+
+        if (myEvents.isEmpty()) {
+            eventPresenceText.setText("Vous n'avez pas encore créé d'événements.");
+        }
+
+        // pour chaque event, créer une "card" HBox
+        for (Event e : myEvents) {
+            // Card linéaire pour les informations générales des events
+            GridPane plannerCard = new GridPane();
+            plannerCard.setId("card");
+            plannerCard.setHgap(10);
+            plannerCard.setVgap(20);
+            ColumnConstraints name = new ColumnConstraints(160);
+            ColumnConstraints date = new ColumnConstraints(160);
+            plannerCard.getColumnConstraints().addAll(name, date);
+
+            // Affectation des noms de chaque champs
+            Label nameField = new Label(e.getName());
+            Label dateField = new Label("Date: " + e.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            Label locationField = new Label("À: " + e.getLocation());
+            Label typeField = new Label("Type: " + e.getType());
+
+            // Affectation des positions sur la grille de chaque champs
+            plannerCard.add(nameField,     0, 0);
+            plannerCard.add(typeField,     1, 0);
+            plannerCard.add(locationField, 0, 1);
+            plannerCard.add(dateField,     1, 1);
+
+            eventsContainer.getChildren().add(plannerCard);
+        }
+    }
+
+    private void addIncomes(UserInfo currentUser) throws Exception {
+        List<Event> myEvents = eventService.listEventsForOrganizer(currentUser);
+        if (myEvents.isEmpty()) {
+            eventPresenceText.setText("Vous n'avez pas encore de revenus");
+        }
+
+        Double totalIncomes = 0.0;
+        incomeContainer.setSpacing(30);
+
+        // itérer sur chaque event pour calculer nb de place vendues et déduire la valeur générée
+        for (Event e : myEvents) {
+            GridPane eventIncomesBox = new GridPane();
+            eventIncomesBox.setVgap(10);
+            Label eventNameField = new Label(e.getName());
+            eventNameField.getStyleClass().add("event-title");
+            eventIncomesBox.add(eventNameField, 0, 0);
+
+            Integer seatsSold = 0;
+            Double incomes = 0.0;
+            for (int i = 0; i < e.getCategories().size(); i++) {
+                EventCategory cat = e.getCategories().get(i);
+
+                GridPane categoryIncomeGrid = new GridPane();
+                categoryIncomeGrid.setHgap(10);
+
+                seatsSold += reservationRepository.countReservationFromOneEventCategory(cat);
+                incomes += seatsSold * cat.getPrice();
+                Label catNameField = new Label(cat.getName());
+                Label seatsSoldField = new Label("Places vendues: " + seatsSold);
+                Label incomesField = new Label("Revenus: " + incomes + "€");
+
+                categoryIncomeGrid.add(catNameField, 0, 0);
+                categoryIncomeGrid.add(seatsSoldField, 0, 1);
+                categoryIncomeGrid.add(incomesField, 0, 2);
+
+                eventIncomesBox.add(categoryIncomeGrid, 0, i+1);
+
+                totalIncomes += incomes;
+            }
+
+            incomeContainer.getChildren().addAll(eventIncomesBox);
+        }
+        totalIncome.setText("Total: " + totalIncomes + "€");
     }
 
     @FXML
