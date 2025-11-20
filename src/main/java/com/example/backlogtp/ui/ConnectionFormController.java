@@ -48,7 +48,7 @@ public class ConnectionFormController {
 
             } else if(userInfo.type().equals("client")) {
                 Parent homepage = FXMLLoader.load(
-                        // Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
+                        //Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
                         Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/marketplace_customer.fxml"))
                 );
                 stage.setScene(new Scene(homepage));

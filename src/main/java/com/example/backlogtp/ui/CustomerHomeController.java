@@ -37,7 +37,6 @@ public class CustomerHomeController {
     private void initialize() throws SQLException {
         reservations.addAll(reservationService.findAllFromOneUser(PlannerApplication.staticUserInfo.id()));
         HBox newEvent =  new HBox(5);
-        newEvent.setMaxWidth(500);
         newEvent.setId("card");
 
         eventContainer.getChildren().add(newEvent);
@@ -47,9 +46,10 @@ public class CustomerHomeController {
     private void addReservation(Reservation reservation){
         GridPane newCard = new GridPane();
         newCard.getStyleClass().add("side-card");
+        newCard.setHgap(10);
 
-        ColumnConstraints nameCol = new ColumnConstraints(150);
-        ColumnConstraints categoryCol = new ColumnConstraints();
+        ColumnConstraints nameCol = new ColumnConstraints(100);
+        ColumnConstraints categoryCol = new ColumnConstraints(100);
         categoryCol.setHgrow(Priority.ALWAYS);
         ColumnConstraints buttonCol = new ColumnConstraints();
         buttonCol.setMinWidth(Region.USE_PREF_SIZE);
@@ -62,10 +62,12 @@ public class CustomerHomeController {
         Label date = new Label(reservation.getEvent().getEvent().getDate().format(DateTimeFormatter.ofPattern("dd/MM:YYYY")));
         Label status = new Label(reservation.getStatus());
         Button bill = new Button("Payer");
+        bill.getStyleClass().add("card-btn");
         bill.setOnMouseClicked(mouseEvent -> {
             openPaiementScreen(reservation);
         });
         Button cancel = new Button("Annuler");
+        cancel.getStyleClass().add("card-btn");
         cancel.setOnMouseClicked(mouseEvent -> {
             try {
                 reservation.cancel();
