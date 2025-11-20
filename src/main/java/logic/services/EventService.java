@@ -19,9 +19,32 @@ import logic.entities.Event;
 import logic.entities.EventCategory;
 import logic.entities.Spectacle;
 
+/**
+ * Classe responsable de la logique métier liée aux événements
+ * 
+ * Elle s'occupe principalement de : 
+ * 
+ * - la création d'un nouvel évenement pour l'organisateur (eventPlanner)
+ * - récuperer la liste des évenements futurs pour les clients
+ * - récuperer la liste des évenements créer par un organisateur
+ * - filtrage de la liste des évenements par catégorie pour les clients 
+ * 
+ * 
+ */
+
 public class EventService {
 
     private final EventRepository events = new EventRepository();
+    
+    /**
+     * Méthode pour créer évenement.
+     * 
+     * Cette méthode sert à créer un nouvel évenement pour les organisateurs.
+     * 
+     * @param input : un DTO 
+     * @throws SQLException
+     * 		   ValidationException
+     */
 
     public void createEvent (CreateEvent input) throws SQLException {
     	
@@ -79,10 +102,22 @@ public class EventService {
 
     }
     
+    /*
+     * Méthode qui renvoie la liste des évenements futurs triés par date pour les clients.
+     *  
+     * @throws SQLException
+     * 		   ValidationException
+     */
     public List<Event> listUpcomingEventsForClient() throws SQLException {
         return events.findUpcomingEventsSortedByDate();
     }
     
+    /*
+     * Méthode qui renvoie la liste des évenements créers par un organisateur.
+     * 
+     * @throws SQLException
+     * 		   ValidationException
+     */
     public List<Event> listEventsForOrganizer(UserInfo userInfo) throws Exception {
 
         if (!"eventPlanner".equalsIgnoreCase(userInfo.type())) {
@@ -92,7 +127,16 @@ public class EventService {
         return events.findEventsByOrganizerEmail(userInfo.email());
     }
     
-    
+    /*
+     * Méthode qui renvoie la liste des évenements filtré par type (Concert,Spectacle,Conference) , 
+     * par lieu et par nom (Pour les clients).
+     * 
+     *@params typeFilter : Concert, Spectacle, Conference
+     *		  locationFilter : Lieu
+     *	      nameFilter : Nom de l'évenement
+     * @throws SQLException
+     * 		   ValidationException
+     */
     public List<Event> searchEventsForClient(String typeFilter, String locationFilter, String nameFilter) throws SQLException {
     	
     	return events.findUpcomingEventsFiltered(typeFilter, locationFilter, nameFilter);

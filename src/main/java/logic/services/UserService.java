@@ -13,9 +13,23 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 
+
+/**
+ * Classe responsable de la logique métier liée à l'utilisateur.
+ * 
+ * Elle s'occupe principalement de : 
+ * 
+ *- créer un nouvel utilisateur
+ *- vérifier que tout les champs remplis sont valides
+ *- connexion d'un utilisateur qui est inscrit
+ *
+ */
 public class UserService {
 	private final UserRepository users = new UserRepository();
 	
+	/*
+	 * Méthode qui se charge de créer un utilisateur à partir de son nom, mail, motdepasse, si c'est un organisateur.
+	 */
 	public void createUser(String name, String email, String password, boolean isEventPlanner) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
 		isValid(name, email, password);
 		User user = isEventPlanner ? new EventPlanner(): new Client();
