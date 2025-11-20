@@ -1,0 +1,9 @@
+package com.example.backlogtp;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+
+public class PlannerApplicationTest {
+
+}
