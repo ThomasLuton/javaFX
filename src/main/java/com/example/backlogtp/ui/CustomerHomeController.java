@@ -3,14 +3,20 @@ package com.example.backlogtp.ui;
 import com.example.backlogtp.PlannerApplication;
 import com.example.backlogtp.utils.exceptions.AnnulationTardiveException;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import com.example.backlogtp.logic.entities.Reservation;
 import com.example.backlogtp.logic.services.ReservationService;
@@ -61,7 +67,7 @@ public class CustomerHomeController {
         Button bill = new Button("Payer");
         bill.getStyleClass().add("card-btn");
         bill.setOnMouseClicked(mouseEvent -> {
-            openPaiementScreen(reservation);
+            openPaiementScreen(reservation, mouseEvent);
         });
         Button cancel = new Button("Annuler");
         cancel.getStyleClass().add("card-btn");
@@ -91,7 +97,10 @@ public class CustomerHomeController {
         newCard.add(categoryName,  1, 0);
         newCard.add(date, 2, 0);
         newCard.add(status, 3, 0);
-        newCard.add(bill, 4,0);
+        if(reservation.getStatus().equals("PENDING")){
+            newCard.add(bill, 4,0);
+        }
+
         newCard.add(cancel, 5,0);
 
         eventContainer.getChildren().add(newCard);
@@ -120,14 +129,50 @@ public class CustomerHomeController {
         stage.show();
     }
 
-    private void openPaiementScreen(Reservation reservation){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("File ton fric, chacal");
-        alert.setContentText("Non je déconne j'ai rien implémenter pour l'instant");
-        alert.showAndWait();
+    private void openPaiementScreen(Reservation reservation, Event event){
+        Popup popup = new Popup();
+        GridPane pane = new GridPane();
+        pane.setHgap(5);
+        pane.setVgap(5);
+        pane.setBorder(Border.stroke(Color.BLACK));
+        pane.setBackground(Background.fill(Color.WHITE));
+        pane.setPadding(new Insets(5));
+        Label cardLabel = new Label("Numéro de la carte");
+        Label nameLabel = new Label("Nom sur la carte");
+        Text customText = new Text();
+        TextField cardNumber = new TextField();
+        TextField nameOnCard = new TextField();
+        Button validate = new Button("Valider");
+        Button cancel = new Button("Annuler");
+        validate.setOnMouseClicked(evt -> {
+            try{
+                reservation.bill(Long.valueOf(cardNumber.getText()), nameOnCard.getText());
+                popup.hide();
+                reloadPage(event);
+            }catch (Exception e){
+                customText.setFill(Color.FIREBRICK);
+                customText.setText(e.getMessage());
+            }
+
+        });
+        cancel.setOnMouseClicked(evt -> {
+            popup.hide();
+        });
+        VBox card = new VBox(cardLabel, cardNumber);
+        VBox name = new VBox(nameLabel, nameOnCard);
+        pane.add(card, 0,0 );
+        pane.add(name, 0, 1);
+        pane.add(customText, 0, 2);
+        pane.add(validate, 0, 3);
+        pane.add(cancel, 1, 3);
+        popup.getContent().add(pane);
+
+        popup.show(((Node) event.getSource()).getScene().getWindow());
+
+
     }
 
-    private void reloadPage(ActionEvent event) throws IOException {
+    private void reloadPage(Event event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent homepage = FXMLLoader.load(
                 Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
