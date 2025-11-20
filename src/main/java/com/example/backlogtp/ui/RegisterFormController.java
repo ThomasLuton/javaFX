@@ -38,22 +38,26 @@ public class RegisterFormController {
     @FXML
     private CheckBox isEventPlanner;
 
+
+    /**
+     * Redirige vers la page de login
+     * @param event
+     */
     @FXML
     private void connect(ActionEvent event){
         try {
-            Parent loginPage = FXMLLoader.load(
-                    Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))
-            );
-            Scene scene = new Scene(loginPage);
+            refreshPage(event, "/com/example/backlogtp/connection_form.fxml");
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
-        }catch (Exception e){
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
 
         }
     }
+
+    /**
+     * créé un utilisateur et le persiste en base de données à partir des champs du formulaire
+     * @param event récupère la source de l'evenement
+     */
     @FXML
     private void register(ActionEvent event) {
         try {
@@ -63,17 +67,8 @@ public class RegisterFormController {
                     pwField.getText(),
                     isEventPlanner.isSelected()
             );
-
             // Redirect to login page
-            Parent loginPage = FXMLLoader.load(
-                    Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))
-            );
-            Scene scene = new Scene(loginPage);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
+            refreshPage(event,"/com/example/backlogtp/connection_form.fxml");
 
         } catch (SQLException | ValidationException ex) {
             customText.setFill(Color.FIREBRICK);
@@ -82,10 +77,26 @@ public class RegisterFormController {
         } catch (IOException ex) {
             customText.setFill(Color.FIREBRICK);
             customText.setText("Could not load login page.");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeySpecException e) {
+
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    /**
+     * méthode générique pour rediriger vers une page donnée
+     * @param event récupère la source du déclenchement
+     * @param url donne le chemin relatif du fichier a charger sous forme de String
+     * @throws IOException
+     */
+    private void refreshPage(ActionEvent event, String url) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent homepage = FXMLLoader.load(
+                Objects.requireNonNull(getClass().getResource(url))
+        );
+        stage.setScene(new Scene(homepage));
+        stage.setMaximized(true);
+        stage.show();
     }
 }

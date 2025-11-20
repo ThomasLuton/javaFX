@@ -35,8 +35,14 @@ public class CustomerHomeController {
     private VBox eventContainer;
 
     private final List<Reservation> reservations = new ArrayList<>();
+
     private final ReservationService reservationService = new ReservationService();
 
+
+    /**
+     * Script de démarrage lors du chargement de la page
+     * @throws SQLException
+     */
     @FXML
     private void initialize() throws SQLException {
         reservations.addAll(reservationService.findAllFromOneUser(PlannerApplication.staticUserInfo.id()));
@@ -47,6 +53,11 @@ public class CustomerHomeController {
         reservations.forEach(reservation -> addReservation(reservation));
     }
 
+
+    /**
+     * Affiche toutes les reservations en cours d'un user dans un scroll pane
+     * @param reservation
+     */
     private void addReservation(Reservation reservation){
         GridPane newCard = new GridPane();
         newCard.getStyleClass().add("side-card");
@@ -82,7 +93,7 @@ public class CustomerHomeController {
                 if(alert.getResult() == ButtonType.OK){
                     reservation.cancel();
                     reservations.remove(reservation);
-                    reloadPage(mouseEvent);
+                    refreshPage(mouseEvent, "/com/example/backlogtp/homepage_customer.fxml");
                 }
             } catch (AnnulationTardiveException | SQLException e) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -107,29 +118,39 @@ public class CustomerHomeController {
         eventContainer.getChildren().add(newCard);
     }
 
+
+    /**
+     * Supprime les user infos et redirige vers la page de login
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void logout(ActionEvent event) throws IOException {
         PlannerApplication.staticUserInfo = null;
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent homepage = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))
-        );
-        stage.setScene(new Scene(homepage));
-        stage.setMaximized(true);
-        stage.show();
+
+        refreshPage(event, "/com/example/backlogtp/connection_form.fxml");
+
     }
 
+
+    /**
+     * Redirige vers la page marketplace pour client
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void goToMarket(ActionEvent event) throws IOException {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent homepage = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/marketPlace_customer.fxml"))
-        );
-        stage.setScene(new Scene(homepage));
-        stage.setMaximized(true);
-        stage.show();
+
+        refreshPage(event, "/com/example/backlogtp/marketPlace_customer.fxml");
+
     }
 
+
+    /**
+     * Ouvre une modale pour effectuer un paiement d'une reservation
+     * @param reservation
+     * @param event
+     */
     private void openPaiementScreen(Reservation reservation, Event event){
         Popup popup = new Popup();
         GridPane pane = new GridPane();
@@ -149,7 +170,7 @@ public class CustomerHomeController {
             try{
                 reservation.bill(Long.valueOf(cardNumber.getText()), nameOnCard.getText());
                 popup.hide();
-                reloadPage(event);
+                refreshPage(event, "/com/example/backlogtp/homepage_customer.fxml");
             }catch (Exception e){
                 customText.setFill(Color.FIREBRICK);
                 customText.setText(e.getMessage());
@@ -173,10 +194,16 @@ public class CustomerHomeController {
 
     }
 
-    private void reloadPage(Event event) throws IOException {
+    /**
+     * méthode générique pour rediriger vers une page donnée
+     * @param event récupère la source du déclenchement
+     * @param url donne le chemin relatif du fichier a charger sous forme de String
+     * @throws IOException
+     */
+    private void refreshPage(Event event, String url) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent homepage = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
+                Objects.requireNonNull(getClass().getResource(url))
         );
         stage.setScene(new Scene(homepage));
         stage.setMaximized(true);

@@ -41,14 +41,27 @@ public class CustomerMarketController {
     public BorderPane root;
 
     private final EventService eventService = new EventService();
+
     private final ReservationService reservationService = new ReservationService();
+
     private final List<EventCategory> selectedCategories = new ArrayList<>();
 
+
+    /**
+     * Script de démarrage lors du chargement de la page
+     * @throws SQLException
+     */
     @FXML
     private void initialize() throws SQLException {
         eventContainer.getStylesheets().add("components.css");
+        displayAllAvailableEvents();
+    }
 
-        // nom, date, location, organisateur, categories (-> nom, prix et capacité)
+    /**
+     * Affiche a l'utilisateur actuel tous les événements disponibles actuellement sur la marketplace
+     * @throws SQLException
+     */
+    private void displayAllAvailableEvents() throws SQLException {
         List<Event> events = eventService.listUpcomingEventsForClient();
 
         if (events.isEmpty()) {
@@ -111,23 +124,26 @@ public class CustomerMarketController {
                 newEvent.add(addBtn,3,i+1);
             }
 
-
             eventContainer.getChildren().addAll(newEvent, newEventCategories);
         }
     }
 
+    /**
+     * Supprime les user ingo et redirige vers la page de login
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void logout(ActionEvent event) throws IOException {
         PlannerApplication.staticUserInfo = null;
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent homepage = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))
-        );
-        stage.setScene(new Scene(homepage));
-        stage.setMaximized(true);
-        stage.show();
+        refreshPage(event, "/com/example/backlogtp/connection_form.fxml");
     }
 
+    /**
+     * Ajoute au panier de reservation l'evenement cliqué
+     * @param event
+     * @param eventCategory
+     */
     public void addSelectedEvent(Event event, EventCategory eventCategory) {
         selectedCategories.add(eventCategory);
         selectedEventsList.getStylesheets().add("components.css");
@@ -160,6 +176,10 @@ public class CustomerMarketController {
         selectedEventsList.getChildren().add(newCard);
     }
 
+    /**
+     * Valide le panier de reservation et lie toutes les reservations dans ce dernier au user actuel
+     * @throws IOException
+     */
     @FXML
     public void validateReservations() throws IOException {
         selectedCategories.forEach(eventCategory -> {
@@ -181,10 +201,28 @@ public class CustomerMarketController {
         stage.show();
     }
 
+    /**
+     * Redirige vers la homepage du client
+     * @param event
+     * @throws IOException
+     */
     public void goToProfile(ActionEvent event) throws IOException {
+
+        refreshPage(event, "/com/example/backlogtp/homepage_customer.fxml");
+
+    }
+
+
+    /**
+     * méthode générique pour rediriger vers une page donnée
+     * @param event récupère la source du déclenchement
+     * @param url donne le chemin relatif du fichier a charger sous forme de String
+     * @throws IOException
+     */
+    private void refreshPage(ActionEvent event, String url) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent homepage = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
+                Objects.requireNonNull(getClass().getResource(url))
         );
         stage.setScene(new Scene(homepage));
         stage.setMaximized(true);

@@ -67,8 +67,40 @@ public class PlannerHomeController {
 
     @FXML
     private Text incomePresence;
+
     private final ReservationService reservationService = new ReservationService();
 
+    /**
+     * Script de démarrage lors du chargement de la page
+     */
+    @FXML
+    private void initialize() {
+        try {
+            if (eventsContainer != null) {
+                eventsContainer.getStylesheets().add("components.css");
+            }
+            // récupérer l'utilisateur connecté
+            UserInfo currentUser = PlannerApplication.staticUserInfo;
+            if (currentUser == null) {
+                System.out.println("Aucun utilisateur connecté");
+                return;
+            }
+
+            // charger toutes les fonctionnalités
+            addCategory();
+            addPlannerEvents(currentUser);
+            addIncomes(currentUser);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Cette méthode permet de créer un événement pour un Event Planner et de le persister en
+     * base de données en récupérant le contenu de chaque champ du formulaire
+     */
     @FXML
     private void createEvent() {
         try {
@@ -100,8 +132,6 @@ public class PlannerHomeController {
                     categories
             );
 
-
-
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText(null);
             alert.setContentText("Voulez vous créer cet évenement ?");
@@ -124,22 +154,11 @@ public class PlannerHomeController {
             customText.setText(e.getMessage());
         }
     }
-    
-    private HBox createEventCard(Event event) {
-        HBox card = new HBox(20);
-        card.setId("card"); // lié au CSS components.css
-        card.setMaxWidth(600);
-
-        Label name = new Label(event.getName());
-        Label date = new Label(event.getDate().toString());
-        Label location = new Label(event.getLocation());
-        Label type = new Label(event.getType());
-
-        card.getChildren().addAll(name, date, location, type);
-        return card;
-    }
 
 
+    /**
+     * Ajout d'une ligne de champs pour créer trois nouvelles entrées pour 'category'
+     */
     @FXML
     private void addCategory() {
         HBox newCategory = new HBox(5);
@@ -166,29 +185,13 @@ public class PlannerHomeController {
         categoriesContainer.getChildren().add(newCategory);
     }
 
-    @FXML
-    private void initialize() {
-        try {
-            if (eventsContainer != null) {
-                eventsContainer.getStylesheets().add("components.css");
-            }
-            // récupérer l'utilisateur connecté
-            UserInfo currentUser = PlannerApplication.staticUserInfo;
-            if (currentUser == null) {
-                System.out.println("Aucun utilisateur connecté");
-                return;
-            }
 
-            // charger toutes les fonctionnalités
-            addCategory();
-            addPlannerEvents(currentUser);
-            addIncomes(currentUser);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     *
+     * @param currentUser récupère la liste des events de l'utilisateur actuel et
+     *                    les affiche dans un scroll pane
+     * @throws Exception
+     */
     private void addPlannerEvents(UserInfo currentUser) throws Exception {
 
         // récupérer les événements du planner actuel
@@ -225,6 +228,12 @@ public class PlannerHomeController {
         }
     }
 
+    /**
+     *
+     * @param currentUser récupère la liste des events de l'utilisateur actuel et calcule les revenus générés par
+     *                    nombre de places vendues. Affiche le nombre de places ainsi que les revenus.
+     * @throws Exception
+     */
     private void addIncomes(UserInfo currentUser) throws Exception {
         List<Event> myEvents = eventService.listEventsForOrganizer(currentUser);
         if (myEvents.isEmpty()) {
@@ -269,12 +278,29 @@ public class PlannerHomeController {
         totalIncome.setText("Total: " + totalIncomes + "€");
     }
 
+
+    /**
+     *
+     * @param event sur le clic du bouton 'Logout', supprime les user infos et redirige vers la page de login
+     * @throws IOException
+     */
     @FXML
     private void logout(ActionEvent event) throws IOException {
         PlannerApplication.staticUserInfo = null;
+        refreshPage(event, "/com/example/backlogtp/connection_form.fxml");
+    }
+
+
+    /**
+     * méthode générique pour rediriger vers une page donnée
+     * @param event récupère la source du déclenchement
+     * @param url donne le chemin relatif du fichier a charger sous forme de String
+     * @throws IOException
+     */
+    private void refreshPage(ActionEvent event, String url) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent homepage = FXMLLoader.load(
-                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/connection_form.fxml"))
+                Objects.requireNonNull(getClass().getResource(url))
         );
         stage.setScene(new Scene(homepage));
         stage.setMaximized(true);
