@@ -20,6 +20,10 @@ public class ReservationService {
         return eventCategory.getCapacity() - reservations.countReservationFromOneEventCategory(eventCategory);
     }
 
+    public int soldPlace(EventCategory eventCategory) throws SQLException{
+        return reservations.countReservationFromOneEventCategory(eventCategory);
+    }
+
     public void createReservation(UserInfo user, EventCategory category) throws SQLException {
         Reservation reservation = new Reservation();
         reservation.setReservationDate(LocalDateTime.now());

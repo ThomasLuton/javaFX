@@ -2,6 +2,7 @@ package com.example.backlogtp.ui;
 
 import com.example.backlogtp.PlannerApplication;
 import com.example.backlogtp.logic.entities.EventCategory;
+import com.example.backlogtp.logic.services.ReservationService;
 import com.example.backlogtp.repositories.ReservationRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -66,8 +67,7 @@ public class PlannerHomeController {
 
     @FXML
     private Text incomePresence;
-
-    private ReservationRepository reservationRepository = new ReservationRepository();
+    private final ReservationService reservationService = new ReservationService();
 
     @FXML
     private void createEvent() {
@@ -249,8 +249,7 @@ public class PlannerHomeController {
 
                 GridPane categoryIncomeGrid = new GridPane();
                 categoryIncomeGrid.setHgap(10);
-
-                seatsSold += reservationRepository.countReservationFromOneEventCategory(cat);
+                seatsSold += reservationService.soldPlace(cat);
                 incomes += seatsSold * cat.getPrice();
                 Label catNameField = new Label(cat.getName());
                 Label seatsSoldField = new Label("Places vendues: " + seatsSold);
