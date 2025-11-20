@@ -20,6 +20,20 @@
         </HBox>
     </top>
 
+    <left>
+        <VBox styleClass="sidebar" spacing="20">
+            <padding><Insets top="30" bottom="30" left="30" right="30"/></padding>
+
+            <Label text="Mon chiffre d'affaire" styleClass="sidebar-title"/>
+            <Label fx:id="totalIncome" styleClass="event-title"/>
+            <Text fx:id="incomePresence" styleClass="subtitle"/>
+
+            <ScrollPane fitToWidth="true" styleClass="sidebar-scroll">
+                <VBox fx:id="incomeContainer" spacing="10"/>
+            </ScrollPane>
+        </VBox>
+    </left>
+
     <center>
         <VBox alignment="TOP_CENTER" spacing="20">
             <padding><Insets top="30" bottom="30" left="30" right="30"/></padding>
@@ -48,7 +62,7 @@
                     <VBox fx:id="categoriesContainer" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
                     <Button text="Ajouter une catégorie"
-                            styleClass="secondary-btn"
+                            styleClass="small-btn"
                             onAction="#addCategory"
                             GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
@@ -61,7 +75,7 @@
                     <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="5">
                         <RadioButton text="Concert" toggleGroup="$eventType"/>
                         <RadioButton text="Spectacle" toggleGroup="$eventType"/>
-                        <RadioButton text="Conférence" toggleGroup="$eventType"/>
+                        <RadioButton text="Conference" toggleGroup="$eventType"/>
                     </VBox>
 
 

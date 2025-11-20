@@ -64,6 +64,8 @@ public class CustomerMarketController {
             newEvent.setId("card");
             newEvent.setHgap(10);
             newEvent.setVgap(20);
+            newEvent.setMaxWidth(Double.POSITIVE_INFINITY);
+            newEvent.setPrefWidth(Double.POSITIVE_INFINITY);
             ColumnConstraints name = new ColumnConstraints(200);
             ColumnConstraints date = new ColumnConstraints(120);
             ColumnConstraints location = new ColumnConstraints(150);

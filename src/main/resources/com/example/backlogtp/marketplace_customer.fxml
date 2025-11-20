@@ -46,9 +46,9 @@
             <Text fx:id="customText"
                   styleClass="title"/>
 
-            <HBox spacing="30" alignment="CENTER">
+            <ScrollPane fitToWidth="true" styleClass="event-container">
                 <VBox fx:id="eventContainer" spacing="10" styleClass="event-container"/>
-            </HBox>
+            </ScrollPane>
 
         </VBox>
     </center>
