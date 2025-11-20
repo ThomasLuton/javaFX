@@ -2,6 +2,7 @@ package com.example.backlogtp.logic.entities;
 
 import com.example.backlogtp.repositories.ReservationRepository;
 import com.example.backlogtp.utils.AbstractDAO;
+import com.example.backlogtp.utils.ReservationStatus;
 import com.example.backlogtp.utils.exceptions.AnnulationTardiveException;
 import com.example.backlogtp.logic.services.Payable;
 import com.example.backlogtp.logic.services.Reservable;
@@ -15,7 +16,7 @@ public class Reservation extends AbstractDAO implements Payable, Reservable {
     private EventCategory event;
     private LocalDateTime reservationDate;
 
-    private String status;
+    private ReservationStatus status;
 
     public User getUser() {
         return user;
@@ -41,11 +42,11 @@ public class Reservation extends AbstractDAO implements Payable, Reservable {
         this.reservationDate = reservationDate;
     }
 
-    public String getStatus() {
+    public ReservationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ReservationStatus status) {
         this.status = status;
     }
 
@@ -61,7 +62,7 @@ public class Reservation extends AbstractDAO implements Payable, Reservable {
 
     @Override
     public boolean isBilled() {
-        return this.status.equals("PAID");
+        return this.status.equals(ReservationStatus.PAID);
     }
 
     @Override

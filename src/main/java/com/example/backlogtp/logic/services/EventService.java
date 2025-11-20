@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.backlogtp.repositories.EventRepository;
 import com.example.backlogtp.repositories.UserRepository;
+import com.example.backlogtp.utils.UserStatus;
 import com.example.backlogtp.utils.exceptions.ValidationException;
 
 import com.example.backlogtp.logic.dtos.CreateEvent;
@@ -22,7 +23,7 @@ public class EventService {
 
     public void createEvent (CreateEvent input) throws SQLException {
     	
-    	if (!input.userInfo().type().equals("eventPlanner")) {
+    	if (!input.userInfo().type().equals(UserStatus.EVENTPLANNER)) {
             throw new ValidationException("Only event's planner can create events.");
         }
 
@@ -82,7 +83,7 @@ public class EventService {
     
     public List<Event> listEventsForOrganizer(UserInfo userInfo) throws Exception {
 
-        if (!"eventPlanner".equalsIgnoreCase(userInfo.type())) {
+        if (!userInfo.type().equals(UserStatus.EVENTPLANNER)) {
             throw new ValidationException("Only event planners can see their events");
         }
 

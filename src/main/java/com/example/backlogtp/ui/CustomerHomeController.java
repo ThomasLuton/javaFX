@@ -1,6 +1,7 @@
 package com.example.backlogtp.ui;
 
 import com.example.backlogtp.PlannerApplication;
+import com.example.backlogtp.utils.ReservationStatus;
 import com.example.backlogtp.utils.exceptions.AnnulationTardiveException;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -63,7 +64,7 @@ public class CustomerHomeController {
         Label eventName = new Label(reservation.getEvent().getEvent().getName());
         Label categoryName = new Label(reservation.getEvent().getName());
         Label date = new Label(reservation.getEvent().getEvent().getDate().format(DateTimeFormatter.ofPattern("dd/MM:YYYY")));
-        Label status = new Label(reservation.getStatus());
+        Label status = new Label(reservation.getStatus().name());
         Button bill = new Button("Payer");
         bill.getStyleClass().add("card-btn");
         bill.setOnMouseClicked(mouseEvent -> {
@@ -97,7 +98,7 @@ public class CustomerHomeController {
         newCard.add(categoryName,  1, 0);
         newCard.add(date, 2, 0);
         newCard.add(status, 3, 0);
-        if(reservation.getStatus().equals("PENDING")){
+        if(reservation.getStatus().equals(ReservationStatus.PENDING)){
             newCard.add(bill, 4,0);
         }
 

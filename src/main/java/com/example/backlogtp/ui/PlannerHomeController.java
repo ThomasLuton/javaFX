@@ -64,6 +64,9 @@ public class PlannerHomeController {
     @FXML
     private Text customText;
 
+    @FXML
+    private Text incomePresence;
+
     private ReservationRepository reservationRepository = new ReservationRepository();
 
     @FXML
@@ -97,19 +100,25 @@ public class PlannerHomeController {
                     categories
             );
 
-            eventService.createEvent(input);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText(null);
-            alert.setContentText("Événement créé avec succès");
+            alert.setContentText("Voulez vous créer cet évenement ?");
             alert.showAndWait();
 
-            Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_planner.fxml")));
-            Stage stage = (Stage) root.getScene().getWindow();
-            stage.setScene(new Scene(refreshed));
-            stage.setMaximized(true);
-            stage.show();
-
+            if (alert.getResult().equals(ButtonType.OK)){
+                eventService.createEvent(input);
+                Alert success = new Alert(Alert.AlertType.INFORMATION);
+                success.setHeaderText(null);
+                success.setContentText("Événement créé avec succès");
+                success.showAndWait();
+                Parent refreshed = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_planner.fxml")));
+                Stage stage = (Stage) root.getScene().getWindow();
+                stage.setScene(new Scene(refreshed));
+                stage.setMaximized(true);
+                stage.show();
+            }
         } catch (Exception e){
             customText.setFill(Color.FIREBRICK);
             customText.setText(e.getMessage());
@@ -219,7 +228,7 @@ public class PlannerHomeController {
     private void addIncomes(UserInfo currentUser) throws Exception {
         List<Event> myEvents = eventService.listEventsForOrganizer(currentUser);
         if (myEvents.isEmpty()) {
-            eventPresenceText.setText("Vous n'avez pas encore de revenus");
+            incomePresence.setText("Vous n'avez pas encore de revenus");
         }
 
         Double totalIncomes = 0.0;

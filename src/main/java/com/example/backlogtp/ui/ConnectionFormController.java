@@ -1,6 +1,7 @@
 package com.example.backlogtp.ui;
 
 import com.example.backlogtp.PlannerApplication;
+import com.example.backlogtp.utils.UserStatus;
 import com.example.backlogtp.utils.exceptions.ValidationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,14 +40,14 @@ public class ConnectionFormController {
             PlannerApplication.staticUserInfo = userInfo;
 
             // Redirection vers la home sur le submit du bouton login en fonction du type d'user
-            if(userInfo.type().equals("eventPlanner")) {
+            if(userInfo.type().equals(UserStatus.EVENTPLANNER)) {
                 Parent homepage = FXMLLoader.load(
                         Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_planner.fxml"))
                 );
                 stage.setScene(new Scene(homepage));
                 stage.setMaximized(true);
 
-            } else if(userInfo.type().equals("client")) {
+            } else if(userInfo.type().equals(UserStatus.CLIENT)) {
                 Parent homepage = FXMLLoader.load(
                         //Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
                         Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/marketplace_customer.fxml"))

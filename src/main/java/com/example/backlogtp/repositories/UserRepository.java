@@ -17,7 +17,7 @@ public class UserRepository {
         preparedStatement.setString(1, user.getName());
         preparedStatement.setString(2, user.getEmail());
         preparedStatement.setString(3, user.getPassword());
-        preparedStatement.setString(4, user.getStatus());
+        preparedStatement.setString(4, user.getStatus().name());
         preparedStatement.execute();
     }
 
@@ -29,7 +29,7 @@ public class UserRepository {
         List<User> users = new ArrayList<>();
         while (resultSet.next()){
             String status = resultSet.getString("status");
-            User user = status.equals("client") ? new Client(): new EventPlanner();
+            User user = status.equals("CLIENT") ? new Client(): new EventPlanner();
             user.setName(resultSet.getString("name"));
             user.setEmail(resultSet.getString("email"));
             user.setPassword(resultSet.getString("password"));

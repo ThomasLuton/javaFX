@@ -1,13 +1,14 @@
 package com.example.backlogtp.logic.entities;
 
 import com.example.backlogtp.utils.AbstractDAO;
+import com.example.backlogtp.utils.UserStatus;
 
 public abstract class User extends AbstractDAO {
 	
 	private String name;
 	private String email;
 	private String password;
-	private String status;
+	private UserStatus status;
 
 	public String getName() {
 		return name;
@@ -28,11 +29,11 @@ public abstract class User extends AbstractDAO {
 		this.password = password;
 	}
 
-	public String getStatus() {
+	public UserStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(UserStatus status) {
 		this.status = status;
 	}
 

@@ -3,6 +3,7 @@ package com.example.backlogtp.repositories;
 import com.example.backlogtp.logic.entities.Event;
 import com.example.backlogtp.logic.entities.EventCategory;
 import com.example.backlogtp.logic.entities.Reservation;
+import com.example.backlogtp.utils.ReservationStatus;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,7 +37,8 @@ public class ReservationRepository {
             reservation.setId(rs.getLong("id"));
             reservation.setUser(users.findById(rs.getLong("user_id")));
             reservation.setEvent(eventCategory);
-            reservation.setStatus(rs.getString("status"));
+            ReservationStatus status = rs.getString("status").equals("PAID") ? ReservationStatus.PAID: ReservationStatus.PENDING;
+            reservation.setStatus(status);
             reservation.setReservationDate(rs.getTimestamp("reservation_date").toLocalDateTime());
             reservations.add(reservation);
         }
@@ -54,7 +56,8 @@ public class ReservationRepository {
             reservation.setId(rs.getLong("id"));
             reservation.setUser(users.findById(id));
             reservation.setEvent(events.findEventCategoryById(rs.getLong("event_category_id")));
-            reservation.setStatus(rs.getString("status"));
+            ReservationStatus status = rs.getString("status").equals("PAID") ? ReservationStatus.PAID: ReservationStatus.PENDING;
+            reservation.setStatus(status);
             reservation.setReservationDate(rs.getTimestamp("reservation_date").toLocalDateTime());
             reservations.add(reservation);
         }
@@ -79,7 +82,7 @@ public class ReservationRepository {
         preparedStatement.setLong(1, reservation.getUser().getId());
         preparedStatement.setLong(2, reservation.getEvent().getId());
         preparedStatement.setTimestamp(3, Timestamp.valueOf(reservation.getReservationDate()));
-        preparedStatement.setString(4, reservation.getStatus());
+        preparedStatement.setString(4, reservation.getStatus().name());
         preparedStatement.executeUpdate();
     }
     public void pay(Reservation reservation) throws SQLException{
