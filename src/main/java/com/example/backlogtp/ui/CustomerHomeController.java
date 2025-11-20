@@ -9,10 +9,7 @@ import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import com.example.backlogtp.logic.entities.Reservation;
@@ -68,15 +65,25 @@ public class CustomerHomeController {
         });
         Button cancel = new Button("Annuler");
         cancel.getStyleClass().add("card-btn");
-        cancel.setOnMouseClicked(mouseEvent -> {
+        cancel.setOnAction(mouseEvent -> {
             try {
-                reservation.cancel();
-                reservations.remove(reservation);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText("Annuler la reservation ?");
+                alert.setContentText("Voulez vous vraiment annuler la reservation?");
+                alert.showAndWait();
+
+                if(alert.getResult() == ButtonType.OK){
+                    reservation.cancel();
+                    reservations.remove(reservation);
+                    reloadPage(mouseEvent);
+                }
             } catch (AnnulationTardiveException | SQLException e) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText(e.getClass().getSimpleName());
                 alert.setContentText(e.getMessage());
                 alert.showAndWait();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
 
@@ -118,6 +125,16 @@ public class CustomerHomeController {
         alert.setHeaderText("File ton fric, chacal");
         alert.setContentText("Non je déconne j'ai rien implémenter pour l'instant");
         alert.showAndWait();
+    }
+
+    private void reloadPage(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent homepage = FXMLLoader.load(
+                Objects.requireNonNull(getClass().getResource("/com/example/backlogtp/homepage_customer.fxml"))
+        );
+        stage.setScene(new Scene(homepage));
+        stage.setMaximized(true);
+        stage.show();
     }
 
 }
