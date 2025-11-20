@@ -8,9 +8,7 @@ import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -32,10 +30,19 @@ public class CustomerMarketController {
     public Text customText;
 
     @FXML
+    public TextField placeOfEvent;
+
+    @FXML
+    public TextField eventName;
+
+    @FXML
     private VBox eventContainer;
 
     @FXML
     private VBox selectedEventsList;
+
+    @FXML
+    private ToggleGroup eventType;
 
     @FXML
     public BorderPane root;
@@ -227,5 +234,16 @@ public class CustomerMarketController {
         stage.setScene(new Scene(homepage));
         stage.setMaximized(true);
         stage.show();
+    }
+
+    @FXML
+    public void filterEvents(ActionEvent event) throws IOException, SQLException {
+        RadioButton selectedRadio = (RadioButton) eventType.getSelectedToggle();
+
+        List<Event> filteredEvents = eventService.searchEventsForClient(selectedRadio.getText(),
+                                                                placeOfEvent.getText(),
+                                                                eventName.getText());
+
+        // TODO: RE-CHARGER PAGE EN AJOUTANT LA LIST D'EVENT FILTREE
     }
 }
