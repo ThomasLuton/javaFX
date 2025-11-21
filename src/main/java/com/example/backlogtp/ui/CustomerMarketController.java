@@ -77,62 +77,58 @@ public class CustomerMarketController {
             customText.setText("Tous les événements");
         }
 
-        for (Event event : events) {
-
-            // Card linéaire pour les informations générales des events
-            GridPane newEvent = new GridPane();
-            newEvent.setId("card");
-            newEvent.setHgap(10);
-            newEvent.setVgap(20);
-            newEvent.setMaxWidth(Double.POSITIVE_INFINITY);
-            newEvent.setPrefWidth(Double.POSITIVE_INFINITY);
-            ColumnConstraints name = new ColumnConstraints(200);
-            ColumnConstraints date = new ColumnConstraints(120);
-            ColumnConstraints location = new ColumnConstraints(150);
-            ColumnConstraints type = new ColumnConstraints();
-            newEvent.getColumnConstraints().addAll(name, date, location, type);
-
-            // Affectation des noms de chaque champs
-            Label nameField = new Label(event.getName());
-            Label dateField = new Label("Date: " + event.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            Label locationField = new Label("À: " + event.getLocation());
-            Label typeField = new Label(event.getType());
-
-            // Affectation des positions sur la grille de chaque champs
-            newEvent.add(nameField,     0, 0);
-            newEvent.add(dateField,     1, 0);
-            newEvent.add(locationField, 2, 0);
-            newEvent.add(typeField,     3, 0);
+        for (Event event : events) { addEventToContainer(event); }
+    }
 
 
-            // Sous card linéaire pour les informations spécifiques des events
-            GridPane newEventCategories = new GridPane();
-            newEventCategories.setId("categories-card");
-            ColumnConstraints categories = new ColumnConstraints(50);
-            ColumnConstraints price = new ColumnConstraints(50);
-            ColumnConstraints quantity = new ColumnConstraints(50);
-            newEventCategories.getColumnConstraints().addAll(categories, price, quantity);
+    private void addEventToContainer(Event event) throws SQLException {
 
-            for (int i = 0; i < event.getCategories().size(); i++) {
-                EventCategory eventCategory = event.getCategories().get(i);
+        // Card linéaire pour les informations générales des events
+        GridPane newEvent = new GridPane();
+        newEvent.setId("card");
+        newEvent.setHgap(10);
+        newEvent.setVgap(20);
+        newEvent.setMaxWidth(Double.POSITIVE_INFINITY);
+        newEvent.setPrefWidth(Double.POSITIVE_INFINITY);
+        ColumnConstraints name = new ColumnConstraints(200);
+        ColumnConstraints date = new ColumnConstraints(120);
+        ColumnConstraints location = new ColumnConstraints(150);
+        ColumnConstraints type = new ColumnConstraints();
+        newEvent.getColumnConstraints().addAll(name, date, location, type);
 
-                Label category = new Label(eventCategory.getName());
-                Label categoryPrice = new Label(String.valueOf(eventCategory.getPrice()) + "€");
-                int qtt = reservationService.availablePlace(eventCategory);
-                Label categoryQuantity = new Label(qtt + "/" + eventCategory.getCapacity() + " places");
+        // Affectation des noms de chaque champs
+        Label nameField = new Label(event.getName());
+        Label dateField = new Label("Date: " + event.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        Label locationField = new Label("À: " + event.getLocation());
+        Label typeField = new Label(event.getType());
 
-                Button addBtn = new Button("+");
-                addBtn.setId("addBtn");
-                addBtn.setOnAction(e -> addSelectedEvent(event, eventCategory));
+        // Affectation des positions sur la grille de chaque champs
+        newEvent.add(nameField,     0, 0);
+        newEvent.add(dateField,     1, 0);
+        newEvent.add(locationField, 2, 0);
+        newEvent.add(typeField,     3, 0);
 
-                newEvent.add(category,0,i+1);
-                newEvent.add(categoryPrice,1,i+1);
-                newEvent.add(categoryQuantity,2,i+1);
-                newEvent.add(addBtn,3,i+1);
-            }
 
-            eventContainer.getChildren().addAll(newEvent, newEventCategories);
+        // Sous card linéaire pour les informations spécifiques des events
+        for (int i = 0; i < event.getCategories().size(); i++) {
+            EventCategory eventCategory = event.getCategories().get(i);
+
+            Label category = new Label(eventCategory.getName());
+            Label categoryPrice = new Label(String.valueOf(eventCategory.getPrice()) + "€");
+            int qtt = reservationService.availablePlace(eventCategory);
+            Label categoryQuantity = new Label(qtt + "/" + eventCategory.getCapacity() + " places");
+
+            Button addBtn = new Button("+");
+            addBtn.setId("addBtn");
+            addBtn.setOnAction(e -> addSelectedEvent(event, eventCategory));
+
+            newEvent.add(category,0,i+1);
+            newEvent.add(categoryPrice,1,i+1);
+            newEvent.add(categoryQuantity,2,i+1);
+            newEvent.add(addBtn,3,i+1);
         }
+
+        eventContainer.getChildren().addAll(newEvent);
     }
 
     /**
@@ -239,11 +235,15 @@ public class CustomerMarketController {
     @FXML
     public void filterEvents(ActionEvent event) throws IOException, SQLException {
         RadioButton selectedRadio = (RadioButton) eventType.getSelectedToggle();
-
         List<Event> filteredEvents = eventService.searchEventsForClient(selectedRadio.getText(),
                                                                 placeOfEvent.getText(),
                                                                 eventName.getText());
+        eventContainer.getChildren().clear();
 
-        // TODO: RE-CHARGER PAGE EN AJOUTANT LA LIST D'EVENT FILTREE
+        if (filteredEvents.isEmpty()) {
+            System.out.println("No events found");
+        }
+
+        for (Event filteredEvent : filteredEvents) { addEventToContainer(filteredEvent); }
     }
 }

@@ -46,8 +46,8 @@
             <Label text="Filtres" styleClass="sidebar-title"/>
 
             <fx:define><ToggleGroup fx:id="eventType"/></fx:define>
-            <GridPane fx:id="filterList">
-                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <GridPane fx:id="filterList" vgap="10">
+                <VBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
                     <RadioButton text="Concert" toggleGroup="$eventType"/>
                     <RadioButton text="Spectacle" toggleGroup="$eventType"/>
                     <RadioButton text="Conference" toggleGroup="$eventType"/>
